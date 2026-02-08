@@ -1,0 +1,48 @@
+{
+  "name": "Daniel Bonifaz",
+  "shortName": "DBZ",
+  "roles": [
+    "CEO de Kambista",
+    "Autor",
+    "Speaker TEDx",
+    "+500K comunidad"
+  ],
+  "tagline": "Transformando ideas en empresas que impactan Latinoamérica",
+  "bio": "Emprendedor serial peruano. Fundador y CEO de Kambista, la casa de cambio digital líder del Perú. Autor de bestsellers sobre emprendimiento. Speaker TEDx. Construyendo un ecosistema de empresas que transformen Latinoamérica.",
+  "photo": "/images/daniel-hero.jpg",
+  "socialLinks": [
+    {
+      "platform": "instagram",
+      "url": "https://instagram.com/danielbonifazz",
+      "label": "Instagram"
+    },
+    {
+      "platform": "linkedin",
+      "url": "https://linkedin.com/in/danielbonifaz",
+      "label": "LinkedIn"
+    },
+    {
+      "platform": "youtube",
+      "url": "https://youtube.com/@danielbonifaz",
+      "label": "YouTube"
+    },
+    {
+      "platform": "tiktok",
+      "url": "https://tiktok.com/@danielbonifaz",
+      "label": "TikTok"
+    },
+    {
+      "platform": "twitter",
+      "url": "https://x.com/danielbonifazz",
+      "label": "X (Twitter)"
+    }
+  ],
+  "email": "contacto@danielbonifaz.com",
+  "credibilityLogos": [
+    "Forbes",
+    "Bloomberg",
+    "TEDx",
+    "El Comercio",
+    "Gestión"
+  ]
+}

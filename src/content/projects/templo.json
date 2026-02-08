@@ -1,0 +1,10 @@
+{
+  "name": "Templo",
+  "description": "Espacio de coworking y comunidad para emprendedores.",
+  "category": "education",
+  "role": "Fundador",
+  "logo": "logos/templo.svg",
+  "gridSize": "small",
+  "order": 4,
+  "active": true
+}

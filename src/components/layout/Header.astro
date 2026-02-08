@@ -1,0 +1,73 @@
+---
+import { getEntry } from 'astro:content';
+
+const navData = await getEntry('site', 'navigation');
+const items = navData?.data.items ?? [];
+const cta = navData?.data.cta;
+---
+
+<header class="sticky top-0 z-50 w-full border-b border-brand-800 bg-brand-900/80 backdrop-blur-md">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <a href="/" class="text-xl font-bold tracking-tight text-brand-50">
+      Daniel Bonifaz
+    </a>
+
+    <!-- Desktop nav -->
+    <ul class="hidden items-center gap-8 md:flex">
+      {items.map((item: { label: string; href: string }) => (
+        <li>
+          <a
+            href={item.href}
+            class="text-sm text-brand-300 transition-colors hover:text-brand-50"
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+      {cta && (
+        <li>
+          <a
+            href={cta.href}
+            class="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-brand-900 transition-colors hover:bg-accent-light"
+          >
+            {cta.label}
+          </a>
+        </li>
+      )}
+    </ul>
+
+    <!-- Mobile nav (zero JS: details/summary) -->
+    <details class="group relative md:hidden">
+      <summary class="flex cursor-pointer items-center gap-2 text-brand-300 marker:content-['']">
+        <svg class="h-6 w-6 group-open:hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+        <svg class="hidden h-6 w-6 group-open:block" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </summary>
+      <ul class="absolute right-0 top-full mt-2 flex w-48 flex-col gap-1 rounded-lg border border-brand-800 bg-brand-900 p-3 shadow-xl">
+        {items.map((item: { label: string; href: string }) => (
+          <li>
+            <a
+              href={item.href}
+              class="block rounded-md px-3 py-2 text-sm text-brand-300 transition-colors hover:bg-brand-800 hover:text-brand-50"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+        {cta && (
+          <li class="mt-2 border-t border-brand-800 pt-2">
+            <a
+              href={cta.href}
+              class="block rounded-full bg-accent px-4 py-2 text-center text-sm font-semibold text-brand-900 transition-colors hover:bg-accent-light"
+            >
+              {cta.label}
+            </a>
+          </li>
+        )}
+      </ul>
+    </details>
+  </nav>
+</header>

@@ -1,0 +1,10 @@
+{
+  "name": "My Good Week",
+  "description": "Plataforma de bienestar y productividad personal.",
+  "category": "wellness",
+  "role": "Fundador",
+  "logo": "logos/my-good-week.svg",
+  "gridSize": "medium",
+  "order": 3,
+  "active": true
+}

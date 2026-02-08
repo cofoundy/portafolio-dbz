@@ -1,0 +1,13 @@
+{
+  "items": [
+    { "label": "Inicio", "href": "#" },
+    { "label": "Ecosistema", "href": "#ecosistema" },
+    { "label": "Libros", "href": "#libros" },
+    { "label": "Contenido", "href": "#contenido" },
+    { "label": "Speaking", "href": "#speaking" }
+  ],
+  "cta": {
+    "label": "Newsletter",
+    "href": "#newsletter"
+  }
+}

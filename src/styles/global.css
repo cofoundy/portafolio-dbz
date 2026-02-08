@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+/* ============================================
+   Custom Theme Tokens
+   ============================================ */
+@theme {
+  /* Brand colors */
+  --color-brand-900: #0a0a0a;
+  --color-brand-800: #1a1a1a;
+  --color-brand-700: #2d2d2d;
+  --color-brand-600: #404040;
+  --color-brand-500: #525252;
+  --color-brand-400: #737373;
+  --color-brand-300: #a3a3a3;
+  --color-brand-200: #d4d4d4;
+  --color-brand-100: #f0f0f0;
+  --color-brand-50: #fafafa;
+
+  --color-accent: #c8a97e;
+  --color-accent-light: #dfc9a8;
+  --color-accent-dark: #a88b5e;
+
+  /* Font families */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ============================================
+   Font Face — Variable Font (Inter placeholder)
+   Reemplazar con la fuente definitiva cuando esté disponible.
+   ============================================ */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/inter-variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* ============================================
+   View Transition
+   ============================================ */
+@view-transition {
+  navigation: auto;
+}
+
+/* ============================================
+   CSS @property — para animaciones de conteo (Stats)
+   ============================================ */
+@property --stat-value {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-900);
+  color: var(--color-brand-100);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-brand-900);
+}

@@ -1,0 +1,14 @@
+{
+  "title": "El Arte de la Distracción",
+  "synopsis": "Una reflexión sobre cómo la distracción consciente puede ser una herramienta para la creatividad y la innovación en el mundo del emprendimiento.",
+  "publisher": "Planeta",
+  "date": "2024",
+  "cover": "books/el-arte-de-la-distraccion.jpg",
+  "buyLinks": [
+    {
+      "platform": "Amazon",
+      "url": "https://amazon.com/dp/example2"
+    }
+  ],
+  "bestseller": false
+}
