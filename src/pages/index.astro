@@ -31,24 +31,24 @@ import bookDistraccion from '../assets/images/books/el-arte-de-la-distraccion.we
           <p class="mt-4 max-w-xl text-base text-brand-300">
             CEO de Kambista · Autor · Speaker TEDx · +500K comunidad
           </p>
-          <div class="mt-6 flex flex-wrap gap-3">
-            <Button href="#newsletter" variant="primary" size="md">Suscríbete al newsletter</Button>
-            <Button href="#ecosistema" variant="secondary" size="md">Conoce el ecosistema</Button>
+          <div class="mt-6 flex flex-col gap-3 md:flex-row md:flex-wrap">
+            <Button href="#newsletter" variant="primary" size="md" class="w-full md:w-auto">Suscríbete al newsletter</Button>
+            <Button href="#ecosistema" variant="secondary" size="md" class="w-full md:w-auto">Conoce el ecosistema</Button>
           </div>
         </div>
         <!-- Visto en — dentro del intro -->
-        <div class="mt-8 flex flex-wrap items-center gap-4 border-t border-brand-700/50 pt-6">
+        <div class="mt-8 flex flex-wrap items-center gap-2 border-t border-brand-700/50 pt-6 md:gap-4">
           <span class="text-xs uppercase tracking-wider text-brand-500">Visto en</span>
-          <span class="text-sm font-medium text-brand-400">Forbes</span>
-          <span class="text-sm font-medium text-brand-400">Bloomberg</span>
-          <span class="text-sm font-medium text-brand-400">TEDx</span>
-          <span class="text-sm font-medium text-brand-400">El Comercio</span>
-          <span class="text-sm font-medium text-brand-400">Gestión</span>
+          <span class="text-xs font-medium text-brand-400 md:text-sm">Forbes</span>
+          <span class="text-xs font-medium text-brand-400 md:text-sm">Bloomberg</span>
+          <span class="text-xs font-medium text-brand-400 md:text-sm">TEDx</span>
+          <span class="text-xs font-medium text-brand-400 md:text-sm">El Comercio</span>
+          <span class="text-xs font-medium text-brand-400 md:text-sm">Gestión</span>
         </div>
       </BentoCard>
 
       <!-- Foto + Redes — 1 col x 2 rows -->
-      <BentoCard variant="photo" span="col-span-2 row-span-2 md:col-span-1">
+      <BentoCard variant="photo" span="col-span-2 md:col-span-1 md:row-span-2" class="min-h-[280px] md:min-h-0">
         <!-- Foto — flotante, centrada en todo el card, fuera del flow -->
         <img
           src="/images/daniel-bonifaz-perfil.jpg"
@@ -101,27 +101,27 @@ import bookDistraccion from '../assets/images/books/el-arte-de-la-distraccion.we
             title="Lo que he construido"
             description="Fintech, inversiones y productividad. Empresas que transforman Latinoamérica."
           />
-          <div class="mt-6 inline-grid grid-cols-3 gap-3 md:gap-4">
+          <div class="mt-6 inline-grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
             <div class="flex flex-col gap-2">
               <span class="text-xs text-brand-400">Fintech</span>
-              <a href="https://kambista.com" target="_blank" rel="noopener noreferrer" data-empresa="kambista" class="grid place-items-center rounded-inner bg-brand-700/50 px-4 py-3 transition-colors hover:bg-brand-700/70">
-                <Image src={logoKambista} alt="Kambista" class="h-8 w-auto" />
+              <a href="https://kambista.com" target="_blank" rel="noopener noreferrer" data-empresa="kambista" class="grid place-items-center rounded-inner bg-brand-700/50 px-3 py-2 transition-colors hover:bg-brand-700/70 md:px-4 md:py-3">
+                <Image src={logoKambista} alt="Kambista" class="h-6 w-auto md:h-8" />
               </a>
             </div>
             <div class="flex flex-col gap-2">
               <span class="text-xs text-brand-400">Inversiones</span>
-              <a href="https://flipinversiones.com" target="_blank" rel="noopener noreferrer" data-empresa="flip" class="grid place-items-center rounded-inner bg-brand-700/50 px-4 py-3 transition-colors hover:bg-brand-700/70">
-                <Image src={logoFlip} alt="Flip" class="h-8 w-auto" />
+              <a href="https://flipinversiones.com" target="_blank" rel="noopener noreferrer" data-empresa="flip" class="grid place-items-center rounded-inner bg-brand-700/50 px-3 py-2 transition-colors hover:bg-brand-700/70 md:px-4 md:py-3">
+                <Image src={logoFlip} alt="Flip" class="h-6 w-auto md:h-8" />
               </a>
             </div>
             <div class="flex flex-col gap-2">
               <span class="text-xs text-brand-400">Productividad</span>
-              <a href="https://mygoodweek.com" target="_blank" rel="noopener noreferrer" data-empresa="mgw" class="grid place-items-center rounded-inner bg-brand-700/50 px-4 py-3 transition-colors hover:bg-brand-700/70">
-                <Image src={logoMgw} alt="MyGoodWeek" class="h-8 w-auto" />
+              <a href="https://mygoodweek.com" target="_blank" rel="noopener noreferrer" data-empresa="mgw" class="grid place-items-center rounded-inner bg-brand-700/50 px-3 py-2 transition-colors hover:bg-brand-700/70 md:px-4 md:py-3">
+                <Image src={logoMgw} alt="MyGoodWeek" class="h-6 w-auto md:h-8" />
               </a>
             </div>
           </div>
-          <div id="empresa-detail" class="mt-6 min-h-[3rem] opacity-0 transition-opacity duration-200">
+          <div id="empresa-detail" class="mt-6 hidden min-h-[3rem] opacity-0 transition-opacity duration-200 md:block">
             <p id="empresa-role" class="text-sm font-medium text-brand-200"></p>
             <p id="empresa-desc" class="mt-1 text-xs text-brand-400"></p>
           </div>
@@ -178,7 +178,7 @@ import bookDistraccion from '../assets/images/books/el-arte-de-la-distraccion.we
       </BentoCard>
 
       <!-- Podcast + Speaking — 3 cols compartidas -->
-      <div class="col-span-2 md:col-span-3 grid grid-cols-2 gap-3 md:gap-4">
+      <div class="col-span-2 md:col-span-3 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         <BentoCard size="md" id="contenido">
           <SectionHeader
             label="Podcast"

@@ -183,10 +183,20 @@ body {
   transition: transform 0.4s ease-out;
 }
 
-#libros:hover .book-marquee-content {
-  animation: book-scroll 10s linear infinite;
+/* En dispositivos touch, auto-scroll siempre */
+@media (hover: none) {
+  .book-marquee-content {
+    animation: book-scroll 10s linear infinite;
+  }
 }
 
-#libros:hover .book-marquee:hover .book-marquee-content {
-  animation-play-state: paused;
+/* En dispositivos con hover, mantener comportamiento actual */
+@media (hover: hover) {
+  #libros:hover .book-marquee-content {
+    animation: book-scroll 10s linear infinite;
+  }
+
+  #libros:hover .book-marquee:hover .book-marquee-content {
+    animation-play-state: paused;
+  }
 }
