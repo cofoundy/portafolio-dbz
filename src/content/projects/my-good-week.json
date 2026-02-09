@@ -1,10 +1,11 @@
 {
-  "name": "My Good Week",
-  "description": "Plataforma de bienestar y productividad personal.",
+  "name": "MyGoodWeek",
+  "description": "App de productividad y bienestar.",
   "category": "wellness",
-  "role": "Fundador",
-  "logo": "logos/my-good-week.svg",
-  "gridSize": "medium",
+  "categoryLabel": "Productividad",
+  "role": "Founder",
+  "url": "https://mygoodweek.com",
+  "logo": "logos/mgw.svg",
   "order": 3,
   "active": true
 }

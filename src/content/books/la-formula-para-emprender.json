@@ -4,12 +4,13 @@
   "synopsis": "Una guía práctica con las lecciones aprendidas al construir múltiples empresas en Latinoamérica. Desde la idea hasta la ejecución, pasando por financiamiento, equipo y escalamiento.",
   "publisher": "Planeta",
   "date": "2023",
-  "cover": "books/la-formula-para-emprender.jpg",
+  "cover": "books/la-formula-para-emprender.webp",
   "buyLinks": [
     {
       "platform": "Amazon",
       "url": "https://amazon.com/dp/example"
     }
   ],
-  "bestseller": true
+  "bestseller": true,
+  "order": 1
 }

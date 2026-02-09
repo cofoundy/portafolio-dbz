@@ -1,12 +1,12 @@
 {
   "name": "Kambista",
-  "description": "Casa de cambio digital líder del Perú. Más de $1B en transacciones procesadas.",
+  "description": "Casa de cambio digital líder en Perú.",
   "category": "fintech",
-  "role": "Fundador & CEO",
+  "categoryLabel": "Fintech",
+  "role": "Founder & CEO",
   "metrics": "+$1B transacciones",
   "url": "https://kambista.com",
   "logo": "logos/kambista.svg",
-  "gridSize": "large",
   "order": 1,
   "active": true
 }

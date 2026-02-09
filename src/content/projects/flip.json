@@ -1,11 +1,11 @@
 {
   "name": "Flip",
-  "description": "Plataforma de pagos y transferencias internacionales para Latinoamérica.",
-  "category": "fintech",
-  "role": "Co-fundador",
-  "url": "https://flip.pe",
+  "description": "Plataforma de inversiones alternativas.",
+  "category": "investments",
+  "categoryLabel": "Inversiones",
+  "role": "Co-founder",
+  "url": "https://flipinversiones.com",
   "logo": "logos/flip.svg",
-  "gridSize": "medium",
   "order": 2,
   "active": true
 }

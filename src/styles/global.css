@@ -42,22 +42,6 @@
 }
 
 /* ============================================
-   View Transition
-   ============================================ */
-@view-transition {
-  navigation: auto;
-}
-
-/* ============================================
-   CSS @property — para animaciones de conteo (Stats)
-   ============================================ */
-@property --stat-value {
-  syntax: "<integer>";
-  initial-value: 0;
-  inherits: false;
-}
-
-/* ============================================
    Base Styles
    ============================================ */
 html {
@@ -152,7 +136,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .bento-grid > *,
   #intro > :first-child > *,
-  #intro > :last-child {
+  #intro > :last-child,
+  .book-marquee-content {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;

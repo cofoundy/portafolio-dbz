@@ -5,12 +5,12 @@ const projects = defineCollection({
   schema: z.object({
     name: z.string(),
     description: z.string(),
-    category: z.enum(['fintech', 'media', 'wellness', 'tech', 'education']),
+    category: z.string(),
+    categoryLabel: z.string(),
     role: z.string(),
     metrics: z.string().optional(),
     url: z.string().url().optional(),
     logo: z.string(),
-    gridSize: z.enum(['small', 'medium', 'large']).default('medium'),
     order: z.number(),
     active: z.boolean().default(true),
   }),
@@ -33,12 +33,47 @@ const books = defineCollection({
       })
     ).default([]),
     bestseller: z.boolean().default(false),
+    order: z.number(),
   }),
 });
 
 const site = defineCollection({
   type: 'data',
-  schema: z.object({}).passthrough(),
+  schema: z.object({
+    // personal.json
+    name: z.string().optional(),
+    shortName: z.string().optional(),
+    roles: z.array(z.string()).optional(),
+    tagline: z.string().optional(),
+    bio: z.string().optional(),
+    socialLinks: z.array(
+      z.object({
+        platform: z.string(),
+        url: z.string(),
+        label: z.string(),
+      })
+    ).optional(),
+    email: z.string().email().optional(),
+    credibilityLogos: z.array(z.string()).optional(),
+    // navigation.json
+    items: z.array(
+      z.object({
+        label: z.string(),
+        href: z.string(),
+      })
+    ).optional(),
+    cta: z.object({
+      label: z.string(),
+      href: z.string(),
+    }).optional(),
+    // stats.json
+    metrics: z.array(
+      z.object({
+        label: z.string(),
+        display: z.string(),
+      })
+    ).optional(),
+  }),
 });
 
 export const collections = { projects, books, site };

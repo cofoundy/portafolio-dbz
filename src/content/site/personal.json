@@ -9,7 +9,6 @@
   ],
   "tagline": "Transformando ideas en empresas que impactan Latinoamérica",
   "bio": "Emprendedor serial peruano. Fundador y CEO de Kambista, la casa de cambio digital líder del Perú. Autor de bestsellers sobre emprendimiento. Speaker TEDx. Construyendo un ecosistema de empresas que transformen Latinoamérica.",
-  "photo": "/images/daniel-hero.jpg",
   "socialLinks": [
     {
       "platform": "instagram",
@@ -18,17 +17,17 @@
     },
     {
       "platform": "linkedin",
-      "url": "https://linkedin.com/in/danielbonifaz",
+      "url": "https://www.linkedin.com/in/daniel-bonifaz-zegarra-b762757a/",
       "label": "LinkedIn"
     },
     {
       "platform": "youtube",
-      "url": "https://youtube.com/@danielbonifaz",
+      "url": "https://www.youtube.com/@danielbonifazz",
       "label": "YouTube"
     },
     {
       "platform": "tiktok",
-      "url": "https://tiktok.com/@danielbonifaz",
+      "url": "https://www.tiktok.com/@danielbonifazz",
       "label": "TikTok"
     },
     {
