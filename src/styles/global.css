@@ -20,6 +20,11 @@
   --color-accent-light: #dfc9a8;
   --color-accent-dark: #a88b5e;
 
+  /* Semantic radius */
+  --radius-card: 1.5rem;
+  --radius-card-sm: 1rem;
+  --radius-inner: 0.75rem;
+
   /* Font families */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -70,4 +75,35 @@ body {
 ::selection {
   background-color: var(--color-accent);
   color: var(--color-brand-900);
+}
+
+/* ============================================
+   Book Marquee — scroll infinito horizontal
+   ============================================ */
+@keyframes book-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-100% - var(--marquee-gap))); }
+}
+
+.book-marquee {
+  --marquee-gap: 1rem;
+  display: flex;
+  overflow: hidden;
+  gap: var(--marquee-gap);
+}
+
+.book-marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  gap: var(--marquee-gap);
+  transform: translateX(0);
+  transition: transform 0.4s ease-out;
+}
+
+#libros:hover .book-marquee-content {
+  animation: book-scroll 10s linear infinite;
+}
+
+#libros:hover .book-marquee:hover .book-marquee-content {
+  animation-play-state: paused;
 }

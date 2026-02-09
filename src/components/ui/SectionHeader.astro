@@ -1,0 +1,27 @@
+---
+interface Props {
+  label: string;
+  title: string;
+  description?: string;
+  titleTag?: 'h1' | 'h2' | 'h3';
+  titleSize?: 'xl' | '2xl';
+}
+
+const {
+  label,
+  title,
+  description,
+  titleTag: TitleTag = 'h2',
+  titleSize = '2xl',
+} = Astro.props;
+
+const titleClasses = titleSize === '2xl'
+  ? 'mt-2 text-2xl font-bold text-brand-50'
+  : 'mt-2 text-xl font-bold text-brand-50';
+---
+
+<div>
+  <p class="text-xs font-semibold uppercase tracking-wider text-accent">{label}</p>
+  <TitleTag class={titleClasses}>{title}</TitleTag>
+  {description && <p class="mt-2 text-sm text-brand-400">{description}</p>}
+</div>

@@ -1,0 +1,42 @@
+---
+interface Props {
+  variant?: 'default' | 'stat' | 'accent' | 'photo';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  span?: string;
+  id?: string;
+  class?: string;
+}
+
+const { variant = 'default', size, span, id, class: className } = Astro.props;
+
+const sizeDefaults: Record<string, string> = {
+  default: 'lg',
+  stat: 'sm',
+  accent: 'md',
+  photo: 'xs',
+};
+
+const resolvedSize = size ?? sizeDefaults[variant];
+
+const variantClasses: Record<string, string> = {
+  default: 'flex flex-col justify-between rounded-card border border-brand-800 bg-brand-800/40 transition-colors hover:border-accent/30',
+  stat: 'rounded-card-sm border border-brand-800 bg-brand-800/40 text-center transition-colors hover:border-accent/30',
+  accent: 'flex flex-col items-center justify-center rounded-card border border-accent/20 bg-accent/5 text-center transition-colors hover:border-accent/40',
+  photo: 'flex flex-col justify-end relative overflow-hidden rounded-card border border-brand-800 bg-brand-800/60',
+};
+
+const sizeClasses: Record<string, string> = {
+  xs: 'p-3 md:p-4',
+  sm: 'p-5',
+  md: 'p-6',
+  lg: 'p-6 md:p-8',
+  xl: 'p-8 md:p-12',
+};
+---
+
+<div
+  id={id}
+  class:list={[span, variantClasses[variant], sizeClasses[resolvedSize], className]}
+>
+  <slot />
+</div>
