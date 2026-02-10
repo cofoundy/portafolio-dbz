@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BentoCard from '../ui/BentoCard.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects
+  .filter(p => p.data.active)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const logoModules = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/logos/*.svg', { eager: true });
+const getLogo = (path: string) => logoModules[`../../assets/images/${path}`]?.default;
+---
+
+<BentoCard span="col-span-2 row-span-2" id="ecosistema">
+  <div>
+    <SectionHeader
+      label="Empresas"
+      title="Lo que he construido"
+      description="Fintech, inversiones y productividad. Empresas que transforman Latinoamérica."
+    />
+    <div class="mt-6 inline-grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+      {projects.map((project) => {
+        const logo = getLogo(project.data.logo);
+        return (
+          <div class="flex flex-col gap-2">
+            <span class="text-xs text-brand-400">{project.data.categoryLabel}</span>
+            <a href={project.data.url} target="_blank" rel="noopener noreferrer" data-empresa={project.id} class="grid place-items-center rounded-inner bg-brand-700/50 px-3 py-2 transition-colors hover:bg-brand-700/70 md:px-4 md:py-3">
+              {logo && <Image src={logo} alt={project.data.name} loading="eager" class="h-6 w-auto md:h-8" />}
+            </a>
+          </div>
+        );
+      })}
+    </div>
+    <div id="empresa-detail" class="mt-6 hidden min-h-[3rem] opacity-0 transition-opacity duration-200 md:block">
+      <p id="empresa-role" class="text-sm font-medium text-brand-200"></p>
+      <p id="empresa-desc" class="mt-1 text-xs text-brand-400"></p>
+    </div>
+  </div>
+  <script is:inline data-empresas={JSON.stringify(Object.fromEntries(projects.map(p => [p.id, { role: p.data.role, desc: p.data.description }])))}>
+    const script = document.querySelector('script[data-empresas]');
+    const empresas = JSON.parse(script.dataset.empresas);
+    const detail = document.getElementById('empresa-detail');
+    const roleEl = document.getElementById('empresa-role');
+    const descEl = document.getElementById('empresa-desc');
+
+    document.querySelectorAll('[data-empresa]').forEach((link) => {
+      link.addEventListener('mouseenter', () => {
+        const data = empresas[link.dataset.empresa];
+        if (data && roleEl && descEl && detail) {
+          roleEl.textContent = data.role;
+          descEl.textContent = data.desc;
+          detail.classList.replace('opacity-0', 'opacity-100');
+        }
+      });
+      link.addEventListener('mouseleave', () => {
+        if (detail) detail.classList.replace('opacity-100', 'opacity-0');
+      });
+    });
+  </script>
+</BentoCard>

@@ -1,0 +1,17 @@
+---
+import BentoCard from '../ui/BentoCard.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+---
+
+<BentoCard variant="accent" span="col-span-2 md:col-span-1" id="newsletter">
+  <SectionHeader
+    label="Newsletter"
+    title="Bizz"
+    titleSize="xl"
+    description="Consejos de negocios, historias y tendencias cada semana."
+  />
+  <p class="mt-3 text-xs text-accent-dark">+13,000 suscriptores</p>
+  <a href="https://bizzla.substack.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-brand-900 transition-colors hover:bg-accent-light">
+    Suscribirme
+  </a>
+</BentoCard>

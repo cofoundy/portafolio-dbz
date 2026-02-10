@@ -1,0 +1,14 @@
+---
+import { getEntry } from 'astro:content';
+import BentoCard from '../ui/BentoCard.astro';
+
+const statsData = await getEntry('site', 'stats');
+const stats = statsData!.data.metrics!;
+---
+
+{stats.map((stat: { label: string; display: string }) => (
+  <BentoCard variant="stat">
+    <p class="text-2xl font-bold text-brand-50 md:text-3xl">{stat.display}</p>
+    <p class="mt-1 text-xs text-brand-400">{stat.label}</p>
+  </BentoCard>
+))}

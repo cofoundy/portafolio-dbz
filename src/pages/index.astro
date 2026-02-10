@@ -1,37 +1,13 @@
 ---
-import { Image } from 'astro:assets';
-import { getCollection, getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/ui/Button.astro';
-import BentoCard from '../components/ui/BentoCard.astro';
-import SectionHeader from '../components/ui/SectionHeader.astro';
-import SocialIcon from '../components/ui/SocialIcon.astro';
-import Scrollytelling from '../components/sections/Scrollytelling.astro';
-
-import photoPerfil from '../assets/images/daniel-bonifaz-perfil.jpg';
-
-// Content collections
-const personalData = await getEntry('site', 'personal');
-const statsData = await getEntry('site', 'stats');
-const personal = personalData!.data;
-const stats = statsData!.data.metrics!;
-
-const allProjects = await getCollection('projects');
-const projects = allProjects
-  .filter(p => p.data.active)
-  .sort((a, b) => a.data.order - b.data.order);
-
-const allBooks = await getCollection('books');
-const books = allBooks.sort((a, b) => a.data.order - b.data.order);
-
-// Logos y covers via glob (escala automáticamente con nuevos archivos)
-const logoModules = import.meta.glob<{ default: ImageMetadata }>('../assets/images/logos/*.svg', { eager: true });
-const coverModules = import.meta.glob<{ default: ImageMetadata }>('../assets/images/books/*.webp', { eager: true });
-
-const getLogo = (path: string) => logoModules[`../assets/images/${path}`]?.default;
-const getCover = (path: string) => coverModules[`../assets/images/${path}`]?.default;
-
-const MARQUEE_COPIES = 4;
+import IntroCard from '../components/sections/IntroCard.astro';
+import PhotoCard from '../components/sections/PhotoCard.astro';
+import StatsGrid from '../components/sections/StatsGrid.astro';
+import EcosystemCard from '../components/sections/EcosystemCard.astro';
+import BooksCard from '../components/sections/BooksCard.astro';
+import PodcastCard from '../components/sections/PodcastCard.astro';
+import SpeakingCard from '../components/sections/SpeakingCard.astro';
+import NewsletterCard from '../components/sections/NewsletterCard.astro';
 ---
 
 <BaseLayout
@@ -41,220 +17,16 @@ const MARQUEE_COPIES = 4;
   <!-- Bento Grid Hub -->
   <section class="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
     <div class="bento-grid grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-
-      <!-- Intro — card principal, 3 cols x 2 rows (incluye "Visto en") -->
-      <BentoCard variant="default" size="xl" span="col-span-2 row-span-2 md:col-span-3" id="intro">
-        <!-- Botón cerrar (solo visible en modo expandido) -->
-        <button
-          id="scrollytelling-close"
-          class="intro-close-btn absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full text-brand-400 transition-colors hover:bg-brand-800 hover:text-brand-50"
-          aria-label="Cerrar ecosistema"
-        >
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <!-- Contenido original de la intro -->
-        <div id="intro-default" class="flex flex-col justify-between flex-1">
-          <div id="intro-hero">
-            <div id="intro-text">
-              <p class="text-sm font-medium text-accent">{personal.roles!.join(' · ')}</p>
-              <h1 class="mt-3 text-3xl font-bold leading-tight tracking-tight text-brand-50 md:text-5xl lg:text-6xl">
-                {personal.tagline}
-              </h1>
-              <p class="mt-4 max-w-xl text-base text-brand-300">
-                {personal.name}
-              </p>
-              <div id="intro-buttons" class="mt-6 flex flex-col gap-3 md:flex-row md:flex-wrap">
-                <Button variant="primary" size="md" class="w-full md:w-auto" id="btn-ecosistema" aria-expanded="false">Conoce el ecosistema</Button>
-                <Button href="#newsletter" variant="secondary" size="md" class="w-full md:w-auto">Suscríbete al newsletter</Button>
-              </div>
-            </div>
-            <Image
-              src={photoPerfil}
-              alt="Daniel Bonifaz Zegarra"
-              id="intro-photo"
-              class="intro-photo rounded-full border-2 border-accent/50 object-cover object-top"
-            />
-          </div>
-          <!-- Visto en -->
-          <div id="intro-visto-en" class="mt-8 flex flex-wrap items-center gap-2 border-t border-brand-700/50 pt-6 md:gap-4">
-            <span class="text-xs uppercase tracking-wider text-brand-500">Visto en</span>
-            {personal.credibilityLogos!.map((logo: string) => (
-              <span class="text-xs font-medium text-brand-400 md:text-sm">{logo}</span>
-            ))}
-          </div>
-        </div>
-
-        <!-- Contenido del storytelling (oculto por defecto) -->
-        <div id="intro-story" hidden>
-          <Scrollytelling />
-        </div>
-      </BentoCard>
-
-      <!-- Foto + Redes — 1 col x 2 rows -->
-      <BentoCard variant="photo" span="col-span-2 md:col-span-1 md:row-span-2" class="min-h-[280px] md:min-h-0">
-        <Image
-          src={photoPerfil}
-          alt="Daniel Bonifaz"
-          loading="eager"
-          class="absolute inset-0 h-full w-full object-cover object-top md:object-center"
-        />
-        <div class="relative z-10 flex items-center justify-around gap-3 rounded-2xl bg-brand-900/80 p-3 md:gap-4 md:p-4">
-          {personal.socialLinks!.map((link: { platform: string; url: string; label: string }) => (
-            <SocialIcon platform={link.platform} url={link.url} label={link.label} />
-          ))}
-        </div>
-      </BentoCard>
-
-      <!-- Stats -->
-      {stats.map((stat: { label: string; display: string }) => (
-        <BentoCard variant="stat">
-          <p class="text-2xl font-bold text-brand-50 md:text-3xl">{stat.display}</p>
-          <p class="mt-1 text-xs text-brand-400">{stat.label}</p>
-        </BentoCard>
-      ))}
-
-      <!-- Ecosystem — 2 cols x 2 rows -->
-      <BentoCard span="col-span-2 row-span-2" id="ecosistema">
-        <div>
-          <SectionHeader
-            label="Empresas"
-            title="Lo que he construido"
-            description="Fintech, inversiones y productividad. Empresas que transforman Latinoamérica."
-          />
-          <div class="mt-6 inline-grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-            {projects.map((project) => {
-              const logo = getLogo(project.data.logo);
-              return (
-                <div class="flex flex-col gap-2">
-                  <span class="text-xs text-brand-400">{project.data.categoryLabel}</span>
-                  <a href={project.data.url} target="_blank" rel="noopener noreferrer" data-empresa={project.id} class="grid place-items-center rounded-inner bg-brand-700/50 px-3 py-2 transition-colors hover:bg-brand-700/70 md:px-4 md:py-3">
-                    {logo && <Image src={logo} alt={project.data.name} loading="eager" class="h-6 w-auto md:h-8" />}
-                  </a>
-                </div>
-              );
-            })}
-          </div>
-          <div id="empresa-detail" class="mt-6 hidden min-h-[3rem] opacity-0 transition-opacity duration-200 md:block">
-            <p id="empresa-role" class="text-sm font-medium text-brand-200"></p>
-            <p id="empresa-desc" class="mt-1 text-xs text-brand-400"></p>
-          </div>
-        </div>
-        <script is:inline data-empresas={JSON.stringify(Object.fromEntries(projects.map(p => [p.id, { role: p.data.role, desc: p.data.description }])))}>
-          const script = document.querySelector('script[data-empresas]');
-          const empresas = JSON.parse(script.dataset.empresas);
-          const detail = document.getElementById('empresa-detail');
-          const roleEl = document.getElementById('empresa-role');
-          const descEl = document.getElementById('empresa-desc');
-
-          document.querySelectorAll('[data-empresa]').forEach((link) => {
-            link.addEventListener('mouseenter', () => {
-              const data = empresas[link.dataset.empresa];
-              if (data && roleEl && descEl && detail) {
-                roleEl.textContent = data.role;
-                descEl.textContent = data.desc;
-                detail.classList.replace('opacity-0', 'opacity-100');
-              }
-            });
-            link.addEventListener('mouseleave', () => {
-              if (detail) detail.classList.replace('opacity-100', 'opacity-0');
-            });
-          });
-        </script>
-      </BentoCard>
-
-      <!-- Books — 2 cols x 2 rows -->
-      <BentoCard span="col-span-2 row-span-2" id="libros">
-        <SectionHeader
-          label="Libros"
-          title="Autor bestseller"
-          description="Lecciones de emprendimiento destiladas en libros prácticos."
-        />
-        <div class="book-marquee mt-6">
-          {Array.from({ length: MARQUEE_COPIES }).map((_, i) => (
-            <div class="book-marquee-content" aria-hidden={i > 0 ? "true" : undefined}>
-              {books.map((book) => {
-                const cover = getCover(book.data.cover);
-                const searchQuery = encodeURIComponent(`${book.data.title} Daniel Bonifaz comprar`);
-                return (
-                  <a href={`https://www.google.com/search?q=${searchQuery}`} target="_blank" rel="noopener noreferrer" tabindex={i > 0 ? -1 : undefined} class="shrink-0">
-                    {cover && <Image src={cover} alt={book.data.title} loading="eager" class="h-40 w-auto rounded-lg" />}
-                  </a>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </BentoCard>
-
-      <!-- Podcast + Speaking — 3 cols compartidas -->
+      <IntroCard />
+      <PhotoCard />
+      <StatsGrid />
+      <EcosystemCard />
+      <BooksCard />
       <div class="col-span-2 md:col-span-3 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
-        <BentoCard size="md" id="contenido">
-          <SectionHeader
-            label="Podcast"
-            title="Emprendebroders"
-            titleSize="xl"
-            description="Daniel y Diego hablan como broders sobre negocios, emprendimiento e inversiones."
-          />
-          <a href="https://open.spotify.com/show/5b0fX3uibiUdvzBfOOg95K" target="_blank" rel="noopener noreferrer" class="mt-4 flex items-center gap-3 transition-colors group">
-            <div class="h-12 w-12 shrink-0 rounded-xl bg-[#1DB954]/10 grid place-items-center transition-colors group-hover:bg-[#1DB954]/20">
-              <svg class="h-5 w-5 text-[#1DB954]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-              </svg>
-            </div>
-            <div>
-              <p class="text-sm font-medium text-brand-200 group-hover:text-brand-50 transition-colors">Escuchar en Spotify</p>
-              <p class="text-xs text-brand-500">4.8 ★ · 868 ratings</p>
-            </div>
-          </a>
-        </BentoCard>
-
-        <BentoCard size="md" id="speaking">
-          <SectionHeader
-            label="Speaking"
-            title="TEDx Speaker"
-            titleSize="xl"
-            description="Conferencias sobre innovación y emprendimiento."
-          />
-          <div class="mt-4 flex flex-col gap-2">
-            <a href="https://www.youtube.com/watch?v=71aa8Wh22ew" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 group">
-              <div class="h-10 w-10 shrink-0 rounded-lg bg-red-500/10 grid place-items-center transition-colors group-hover:bg-red-500/20">
-                <svg class="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/>
-                  <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/>
-                </svg>
-              </div>
-              <p class="text-xs text-brand-300 group-hover:text-brand-50 transition-colors">Hacerte amigo del fracaso</p>
-            </a>
-            <a href="https://www.youtube.com/watch?v=beSPp_SOuh4" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 group">
-              <div class="h-10 w-10 shrink-0 rounded-lg bg-red-500/10 grid place-items-center transition-colors group-hover:bg-red-500/20">
-                <svg class="h-4 w-4 text-red-500" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/>
-                  <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/>
-                </svg>
-              </div>
-              <p class="text-xs text-brand-300 group-hover:text-brand-50 transition-colors">Cada uno tiene su propio reloj</p>
-            </a>
-          </div>
-        </BentoCard>
+        <PodcastCard />
+        <SpeakingCard />
       </div>
-
-      <!-- Newsletter CTA — 1 col -->
-      <BentoCard variant="accent" span="col-span-2 md:col-span-1" id="newsletter">
-        <SectionHeader
-          label="Newsletter"
-          title="Bizz"
-          titleSize="xl"
-          description="Consejos de negocios, historias y tendencias cada semana."
-        />
-        <p class="mt-3 text-xs text-accent-dark">+13,000 suscriptores</p>
-        <a href="https://bizzla.substack.com/" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex rounded-full bg-accent px-6 py-2.5 text-sm font-semibold text-brand-900 transition-colors hover:bg-accent-light">
-          Suscribirme
-        </a>
-      </BentoCard>
-
+      <NewsletterCard />
     </div>
   </section>
 

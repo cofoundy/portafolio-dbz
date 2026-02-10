@@ -55,17 +55,6 @@ const site = defineCollection({
     ).optional(),
     email: z.string().email().optional(),
     credibilityLogos: z.array(z.string()).optional(),
-    // navigation.json
-    items: z.array(
-      z.object({
-        label: z.string(),
-        href: z.string(),
-      })
-    ).optional(),
-    cta: z.object({
-      label: z.string(),
-      href: z.string(),
-    }).optional(),
     // stats.json
     metrics: z.array(
       z.object({

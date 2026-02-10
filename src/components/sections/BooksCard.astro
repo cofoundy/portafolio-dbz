@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BentoCard from '../ui/BentoCard.astro';
+import SectionHeader from '../ui/SectionHeader.astro';
+
+const allBooks = await getCollection('books');
+const books = allBooks.sort((a, b) => a.data.order - b.data.order);
+
+const coverModules = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/books/*.webp', { eager: true });
+const getCover = (path: string) => coverModules[`../../assets/images/${path}`]?.default;
+
+const MARQUEE_COPIES = 4;
+---
+
+<BentoCard span="col-span-2 row-span-2" id="libros">
+  <SectionHeader
+    label="Libros"
+    title="Autor bestseller"
+    description="Lecciones de emprendimiento destiladas en libros prácticos."
+  />
+  <div class="book-marquee mt-6">
+    {Array.from({ length: MARQUEE_COPIES }).map((_, i) => (
+      <div class="book-marquee-content" aria-hidden={i > 0 ? "true" : undefined}>
+        {books.map((book) => {
+          const cover = getCover(book.data.cover);
+          const searchQuery = encodeURIComponent(`${book.data.title} Daniel Bonifaz comprar`);
+          return (
+            <a href={`https://www.google.com/search?q=${searchQuery}`} target="_blank" rel="noopener noreferrer" tabindex={i > 0 ? -1 : undefined} class="shrink-0">
+              {cover && <Image src={cover} alt={book.data.title} loading="eager" class="h-40 w-auto rounded-lg" />}
+            </a>
+          );
+        })}
+      </div>
+    ))}
+  </div>
+</BentoCard>

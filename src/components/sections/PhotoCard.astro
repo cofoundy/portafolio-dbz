@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+import BentoCard from '../ui/BentoCard.astro';
+import SocialIcon from '../ui/SocialIcon.astro';
+
+import photoPerfil from '../../assets/images/daniel-bonifaz-perfil.jpg';
+
+const personalData = await getEntry('site', 'personal');
+const personal = personalData!.data;
+---
+
+<BentoCard variant="photo" span="col-span-2 md:col-span-1 md:row-span-2" class="min-h-[280px] md:min-h-0">
+  <Image
+    src={photoPerfil}
+    alt="Daniel Bonifaz"
+    loading="eager"
+    class="absolute inset-0 h-full w-full object-cover object-top md:object-center"
+  />
+  <div class="relative z-10 flex items-center justify-around gap-3 rounded-2xl bg-brand-900/80 p-3 md:gap-4 md:p-4">
+    {personal.socialLinks!.map((link: { platform: string; url: string; label: string }) => (
+      <SocialIcon platform={link.platform} url={link.url} label={link.label} />
+    ))}
+  </div>
+</BentoCard>
