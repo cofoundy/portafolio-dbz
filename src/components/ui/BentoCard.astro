@@ -20,7 +20,7 @@ const resolvedSize = size ?? sizeDefaults[variant];
 
 const variantClasses: Record<string, string> = {
   default: 'flex flex-col justify-between rounded-card border border-brand-800 bg-brand-800/40 transition-colors hover:border-accent/30',
-  stat: 'rounded-card-sm border border-brand-800 bg-brand-800/40 text-center transition-colors hover:border-accent/30',
+  stat: 'flex flex-col items-center justify-center rounded-card-sm border border-brand-800 bg-brand-800/40 text-center transition-colors hover:border-accent/30',
   accent: 'flex flex-col items-center justify-center rounded-card border border-accent/20 bg-accent/5 text-center transition-colors hover:border-accent/40',
   photo: 'flex flex-col justify-end relative overflow-hidden rounded-card border border-brand-800 bg-brand-800/60 transition-colors hover:border-accent/30',
 };

@@ -105,29 +105,29 @@ body {
   }
 }
 
-#intro-default > :first-child > *,
-#intro-default > :last-child {
+#intro-hero > #intro-text > *,
+#intro-default > * {
   animation: intro-reveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 /* Tagline */
-#intro-default > :first-child > :nth-child(1) { animation-delay: 0.1s; }
+#intro-text > :nth-child(1) { animation-delay: 0.1s; }
 /* H1 */
-#intro-default > :first-child > :nth-child(2) { animation-delay: 0.18s; }
+#intro-text > :nth-child(2) { animation-delay: 0.18s; }
 /* Subtítulo */
-#intro-default > :first-child > :nth-child(3) { animation-delay: 0.26s; }
+#intro-text > :nth-child(3) { animation-delay: 0.26s; }
 /* Botones */
-#intro-default > :first-child > :nth-child(4) { animation-delay: 0.34s; }
+#intro-default > :nth-child(1) { animation-delay: 0.34s; }
 /* Visto en */
-#intro-default > :last-child { animation-delay: 0.42s; }
+#intro-default > :nth-child(2) { animation-delay: 0.42s; }
 
 /* Accesibilidad: respetar preferencias del usuario */
 @media (prefers-reduced-motion: reduce) {
   .bento-grid > *,
-  #intro-default > :first-child > *,
-  #intro-default > :last-child,
+  #intro-hero > #intro-text > *,
+  #intro-default > *,
   .book-marquee-content,
-  #intro.intro-expanded,
+  .card-expanded,
   .scrollytelling-chapter,
   .chapter-item {
     animation: none !important;
@@ -184,6 +184,71 @@ body {
 }
 
 /* ============================================
+   Podcast Card — layout horizontal cuando es 2-col
+   ============================================ */
+#contenido.col-span-2 .podcast-inner {
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+#contenido.col-span-2 .podcast-cover {
+  display: block;
+  flex: 1 1 0%;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+#contenido.col-span-2 .podcast-inner > :last-child {
+  flex-shrink: 0;
+}
+
+/* Escalar a tamaño de cards 2-col (igual que Empresas/Libros) */
+#contenido.col-span-2 {
+  padding: 2rem;
+}
+
+#contenido.col-span-2 h2 {
+  font-size: var(--text-2xl);
+  line-height: var(--tw-leading, 2rem);
+}
+
+/* ============================================
+   Cards — expansión genérica FLIP clip-path
+   ============================================ */
+
+/* Clase genérica para cards expandidas */
+.card-expanded {
+  grid-column: 1 / -1;
+  grid-row: auto;
+  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Botón expandir: visible por defecto, oculto en modo expandido */
+.expand-btn {
+  display: grid;
+}
+
+.card-expanded .expand-btn {
+  display: none;
+}
+
+/* Botón cerrar: oculto por defecto, visible en modo expandido */
+.close-btn {
+  display: none;
+}
+
+.card-expanded .close-btn {
+  display: grid;
+}
+
+/* Cards expandibles necesitan position relative */
+#intro, #empresas, #libros {
+  position: relative;
+}
+
+/* ============================================
    Intro Card — expansión (storytelling)
    ============================================ */
 /* Foto circular: oculta por defecto */
@@ -191,24 +256,18 @@ body {
   display: none;
 }
 
-#intro.intro-expanded {
-  grid-column: 1 / -1;
-  grid-row: auto;
-  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 /* No re-animar intro-reveal al volver */
-#intro.intro-expanded > * {
+#intro.card-expanded > * {
   animation: none;
 }
 
 /* Hero: foto posicionada sin afectar el texto */
-#intro.intro-expanded #intro-hero {
+#intro.card-expanded #intro-hero {
   position: relative;
 }
 
 /* Mostrar foto circular, absoluta a la derecha */
-#intro.intro-expanded .intro-photo {
+#intro.card-expanded .intro-photo {
   display: block;
   position: absolute;
   right: 0;
@@ -216,25 +275,6 @@ body {
   transform: translateY(-50%);
 }
 
-/* Ocultar botones y visto en */
-#intro.intro-expanded #intro-buttons,
-#intro.intro-expanded #intro-visto-en {
-  display: none !important;
-}
-
-/* Intro card necesita position relative para el botón cerrar */
-#intro {
-  position: relative;
-}
-
-/* Botón cerrar: oculto por defecto, visible en modo expandido */
-.intro-close-btn {
-  display: none;
-}
-
-#intro.intro-expanded .intro-close-btn {
-  display: grid;
-}
 
 /* Chapter sections */
 .scrollytelling-chapter {

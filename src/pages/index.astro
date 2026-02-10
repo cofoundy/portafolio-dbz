@@ -22,7 +22,7 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
       <StatsGrid />
       <EcosystemCard />
       <BooksCard />
-      <div class="col-span-2 md:col-span-3 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+      <div id="podcast-speaking" class="col-span-2 md:col-span-3 grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
         <PodcastCard />
         <SpeakingCard />
       </div>
@@ -30,224 +30,436 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
     </div>
   </section>
 
-  <!-- Script de expansión del intro card -->
+  <!-- Script de expansión de cards (FLIP clip-path) -->
   <script is:inline>
   (function () {
-    var intro = document.getElementById('intro');
-    var introDefault = document.getElementById('intro-default');
-    var introStory = document.getElementById('intro-story');
-    var btnOpen = document.getElementById('btn-ecosistema');
-    var btnClose = document.getElementById('scrollytelling-close');
     var bentoGrid = document.querySelector('.bento-grid');
+    if (!bentoGrid) return;
 
+    var RADIUS = '1.5rem';
+    var expandedCards = [];
+
+    // ========================================
+    // Factory genérica para expansión de cards
+    // ========================================
+    function createCardExpansion(config) {
+      var card = document.getElementById(config.cardId);
+      var defaultContent = document.getElementById(config.defaultId);
+      var expandedContent = document.getElementById(config.expandedId);
+      var btnOpen = document.getElementById(config.btnOpenId);
+      var btnClose = document.getElementById(config.btnCloseId);
+
+      if (!card || !defaultContent || !expandedContent || !btnOpen || !btnClose) return null;
+
+      var hideSiblings = config.hideSiblings !== false;
+      var siblings = Array.prototype.filter.call(bentoGrid.children, function (el) {
+        return el !== card;
+      });
+
+      var savedClipPath = '';
+      var savedTransform = '';
+
+      function open() {
+        // Cerrar cards incompatibles:
+        // hideSiblings=true (intro) cierra TODAS las demás
+        // hideSiblings=false (empresas/libros) solo cierra las que tienen hideSiblings=true
+        expandedCards.slice().forEach(function (exp) {
+          if (exp === expansion) return;
+          if (hideSiblings || exp.hideSiblings) {
+            exp.closeInstant();
+          }
+        });
+
+        // Hook pre-open
+        if (config.onOpen) config.onOpen();
+
+        // FLIP: capturar rect antes del cambio
+        var firstRect = card.getBoundingClientRect();
+
+        // Hook: cambios de layout adicionales (ej. mover stats)
+        if (config.onLayout) config.onLayout();
+
+        // Cambiar layout: expandir card, mostrar contenido expandido
+        if (hideSiblings) {
+          siblings.forEach(function (el) { el.hidden = true; });
+        }
+        card.classList.add('card-expanded');
+        defaultContent.hidden = true;
+        expandedContent.hidden = false;
+
+        // FLIP: rect después del cambio
+        var lastRect = card.getBoundingClientRect();
+
+        // Calcular transform para mover la card a su posición original
+        var dx = firstRect.left - lastRect.left;
+        var dy = firstRect.top - lastRect.top;
+        savedTransform = 'translate(' + dx + 'px,' + dy + 'px)';
+
+        // Calcular clip-path para recortar al tamaño original
+        // (relativo al elemento, sin considerar posición porque transform la maneja)
+        var clipRight = Math.max(0, lastRect.width - firstRect.width);
+        var clipBottom = Math.max(0, lastRect.height - firstRect.height);
+
+        savedClipPath = 'inset(0px ' + clipRight + 'px ' + clipBottom + 'px 0px round ' + RADIUS + ')';
+
+        // Aplicar estado inicial sin transición (card en posición y tamaño original)
+        card.style.transition = 'none';
+        card.style.transform = savedTransform;
+        card.style.clipPath = savedClipPath;
+        card.offsetHeight; // force reflow
+
+        // Animar a tamaño completo y posición final
+        card.style.transition = '';
+        card.style.transform = 'none';
+        card.style.clipPath = 'inset(0 round ' + RADIUS + ')';
+
+        if (btnOpen.setAttribute) btnOpen.setAttribute('aria-expanded', 'true');
+        window.scrollTo({ top: card.offsetTop - 32, behavior: 'smooth' });
+        btnClose.focus({ preventScroll: true });
+
+        expandedCards.push(expansion);
+      }
+
+      function close() {
+        if (btnOpen.setAttribute) btnOpen.setAttribute('aria-expanded', 'false');
+
+        // Animar de vuelta al tamaño y posición original
+        card.style.transform = savedTransform;
+        card.style.clipPath = savedClipPath;
+
+        var done = false;
+        function onDone() {
+          if (done) return;
+          done = true;
+          cleanup();
+          btnOpen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          btnOpen.focus({ preventScroll: true });
+        }
+
+        card.addEventListener('transitionend', function handler(e) {
+          if (e.propertyName !== 'clip-path') return;
+          card.removeEventListener('transitionend', handler);
+          onDone();
+        });
+
+        // Fallback si la transición no dispara
+        setTimeout(onDone, 600);
+      }
+
+      function closeInstant() {
+        cleanup();
+        if (btnOpen.setAttribute) btnOpen.setAttribute('aria-expanded', 'false');
+      }
+
+      function cleanup() {
+        card.style.clipPath = '';
+        card.style.transition = '';
+        card.style.transform = '';
+        card.classList.remove('card-expanded');
+        defaultContent.hidden = false;
+        expandedContent.hidden = true;
+        if (hideSiblings) {
+          siblings.forEach(function (el) { el.hidden = false; });
+        }
+        var idx = expandedCards.indexOf(expansion);
+        if (idx !== -1) expandedCards.splice(idx, 1);
+        if (config.onClose) config.onClose();
+      }
+
+      btnOpen.addEventListener('click', open);
+      btnClose.addEventListener('click', close);
+
+      var expansion = { open: open, close: close, closeInstant: closeInstant, cardId: config.cardId, hideSiblings: hideSiblings };
+      return expansion;
+    }
+
+    // ========================================
+    // IntroCard
+    // ========================================
     var introPhoto = document.getElementById('intro-photo');
     var introText = document.getElementById('intro-text');
-    var introH1 = intro.querySelector('h1');
+    var introCard = document.getElementById('intro');
+    var introH1 = introCard ? introCard.querySelector('h1') : null;
 
-    if (!intro || !introDefault || !introStory || !btnOpen || !btnClose || !bentoGrid) return;
-
-    var siblings = Array.prototype.filter.call(bentoGrid.children, function (el) {
-      return el !== intro;
+    var introExpansion = createCardExpansion({
+      cardId: 'intro',
+      defaultId: 'intro-default',
+      expandedId: 'intro-story',
+      btnOpenId: 'btn-ecosistema',
+      btnCloseId: 'scrollytelling-close',
+      onOpen: function () {
+        // Fijar ancho del texto antes de expandir
+        if (introText) introText.style.maxWidth = introText.offsetWidth + 'px';
+        // Dimensionar foto al alto del h1
+        if (introPhoto && introH1) {
+          var h1Height = introH1.offsetHeight;
+          introPhoto.style.width = h1Height + 'px';
+          introPhoto.style.height = h1Height + 'px';
+        }
+      },
+      onClose: function () {
+        if (introText) introText.style.maxWidth = '';
+      }
     });
-
-    var savedClipPath = '';
-    var RADIUS = '1.5rem';
-
-    function open() {
-      // Fijar ancho del texto antes de expandir
-      var textWidth = introText.offsetWidth;
-      // FLIP: capturar rect antes del cambio
-      var firstRect = intro.getBoundingClientRect();
-
-      // Cambiar layout: ocultar siblings, expandir intro, mostrar story
-      introText.style.maxWidth = textWidth + 'px';
-      siblings.forEach(function (el) { el.hidden = true; });
-      intro.classList.add('intro-expanded');
-      introStory.hidden = false;
-
-      // Dimensionar foto al alto del h1
-      if (introPhoto && introH1) {
-        var h1Height = introH1.offsetHeight;
-        introPhoto.style.width = h1Height + 'px';
-        introPhoto.style.height = h1Height + 'px';
-      }
-
-
-      // FLIP: rect después del cambio
-      var lastRect = intro.getBoundingClientRect();
-
-      // Calcular clip-path para recortar al tamaño original
-      var top = 0;
-      var right = Math.max(0, lastRect.width - firstRect.width);
-      var bottom = Math.max(0, lastRect.height - firstRect.height);
-      var left = 0;
-
-      savedClipPath = 'inset(' + top + 'px ' + right + 'px ' + bottom + 'px ' + left + 'px round ' + RADIUS + ')';
-
-      // Aplicar clip-path inicial (sin transición)
-      intro.style.transition = 'none';
-      intro.style.clipPath = savedClipPath;
-      intro.offsetHeight;
-
-      // Animar a tamaño completo
-      intro.style.transition = '';
-      intro.style.clipPath = 'inset(0 round ' + RADIUS + ')';
-
-      btnOpen.setAttribute('aria-expanded', 'true');
-      window.scrollTo({ top: intro.offsetTop - 32, behavior: 'smooth' });
-      btnClose.focus({ preventScroll: true });
-    }
-
-    function close() {
-      btnOpen.setAttribute('aria-expanded', 'false');
-
-      // Animar de vuelta al tamaño original
-      intro.style.clipPath = savedClipPath;
-
-      var done = false;
-      function onDone() {
-        if (done) return;
-        done = true;
-        intro.style.clipPath = '';
-        intro.style.transition = '';
-        intro.classList.remove('intro-expanded');
-        introText.style.maxWidth = '';
-        introStory.hidden = true;
-        siblings.forEach(function (el) { el.hidden = false; });
-        btnOpen.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        btnOpen.focus({ preventScroll: true });
-      }
-
-      intro.addEventListener('transitionend', function handler(e) {
-        if (e.propertyName !== 'clip-path') return;
-        intro.removeEventListener('transitionend', handler);
-        onDone();
-      });
-
-      // Fallback si la transición no dispara
-      setTimeout(onDone, 600);
-    }
-
-    btnOpen.addEventListener('click', open);
-    btnClose.addEventListener('click', close);
 
     // CTA buttons dentro del storytelling
-    var ctaNewsletter = introStory.querySelector('.scrollytelling-cta-newsletter');
-    var ctaBack = introStory.querySelector('.scrollytelling-cta-back');
+    var introStory = document.getElementById('intro-story');
+    if (introStory && introExpansion) {
+      var ctaNewsletter = introStory.querySelector('.scrollytelling-cta-newsletter');
+      var ctaBack = introStory.querySelector('.scrollytelling-cta-back');
 
-    if (ctaNewsletter) {
-      ctaNewsletter.addEventListener('click', function () {
-        // Cerrar sin animación e ir al newsletter
-        intro.style.clipPath = '';
-        intro.style.transition = '';
-        intro.classList.remove('intro-expanded');
-        introText.style.maxWidth = '';
-        introStory.hidden = true;
-        siblings.forEach(function (el) { el.hidden = false; });
-        btnOpen.setAttribute('aria-expanded', 'false');
-        var newsletter = document.getElementById('newsletter');
-        if (newsletter) {
-          requestAnimationFrame(function () {
-            newsletter.scrollIntoView({ behavior: 'smooth' });
-          });
+      if (ctaNewsletter) {
+        ctaNewsletter.addEventListener('click', function () {
+          introExpansion.closeInstant();
+          var newsletter = document.getElementById('newsletter');
+          if (newsletter) {
+            requestAnimationFrame(function () {
+              newsletter.scrollIntoView({ behavior: 'smooth' });
+            });
+          }
+        });
+      }
+
+      if (ctaBack) {
+        ctaBack.addEventListener('click', function () { introExpansion.close(); });
+      }
+    }
+
+    // ========================================
+    // Stats: reubicación compartida entre empresas y libros
+    // ========================================
+    var statsRow = document.getElementById('stats-row');
+    var empresasEl = document.getElementById('empresas');
+    var statsPlaceholder = document.createComment('stats-anchor');
+    var statsMoved = false;
+
+    if (statsRow) {
+      statsRow.parentNode.insertBefore(statsPlaceholder, statsRow);
+    }
+
+    var statTheme = document.getElementById('stat-theme');
+
+    function moveStatsToEmpresas() {
+      if (statsMoved || !empresasEl || !statsRow) return;
+      // No mover si empresas está expandido (ambas expandidas → posición inicial)
+      var empOpen = expandedCards.some(function (e) { return e.cardId === 'empresas'; });
+      if (empOpen) return;
+      bentoGrid.insertBefore(statsRow, empresasEl.nextSibling);
+      // Ocultar tema, pasar a 2-col con grid interno de 2, igualar altura de empresas
+      if (statTheme) statTheme.hidden = true;
+      statsRow.classList.replace('md:col-span-4', 'md:col-span-2');
+      statsRow.classList.replace('md:grid-cols-5', 'md:grid-cols-2');
+      statsRow.classList.add('md:row-span-2');
+      statsMoved = true;
+    }
+
+    function restoreStats() {
+      if (!statsMoved || !statsRow) return;
+      bentoGrid.insertBefore(statsRow, statsPlaceholder);
+      // Restaurar layout original con tema visible
+      if (statTheme) statTheme.hidden = false;
+      statsRow.classList.replace('md:col-span-2', 'md:col-span-4');
+      statsRow.classList.replace('md:grid-cols-2', 'md:grid-cols-5');
+      statsRow.classList.remove('md:row-span-2');
+      statsMoved = false;
+    }
+
+    // ========================================
+    // EmpresasCard — al expandir, podcast sube al lado de libros
+    // ========================================
+    var podcastEl = document.getElementById('contenido');
+    var podcastWrapper = document.getElementById('podcast-speaking');
+    var speakingEl = document.getElementById('speaking');
+    var podcastMoved = false;
+
+    function movePodcastToLibros() {
+      if (podcastMoved || !podcastEl || !podcastWrapper) return;
+      // No mover si libros está expandido
+      var librosOpen = expandedCards.some(function (e) { return e.cardId === 'libros'; });
+      if (librosOpen) return;
+      // Extraer podcast del wrapper e insertarlo antes de libros (queda a su izquierda)
+      var librosEl = document.getElementById('libros');
+      if (librosEl) {
+        bentoGrid.insertBefore(podcastEl, librosEl);
+        podcastEl.classList.add('col-span-2', 'row-span-2');
+      }
+      // Wrapper (solo speaking) pasa a col-span-2
+      podcastWrapper.classList.replace('md:col-span-3', 'md:col-span-2');
+      // Speaking ocupa las 2 columnas del wrapper
+      if (speakingEl) speakingEl.classList.add('md:col-span-2');
+      podcastMoved = true;
+    }
+
+    function restorePodcast() {
+      if (!podcastMoved) return;
+      // Devolver podcast al wrapper (antes de speaking)
+      if (speakingEl && podcastWrapper) {
+        podcastWrapper.insertBefore(podcastEl, speakingEl);
+        podcastEl.classList.remove('col-span-2', 'row-span-2');
+      }
+      // Restaurar wrapper
+      podcastWrapper.classList.replace('md:col-span-2', 'md:col-span-3');
+      // Speaking vuelve a 1 columna
+      if (speakingEl) speakingEl.classList.remove('md:col-span-2');
+      podcastMoved = false;
+    }
+
+    createCardExpansion({
+      cardId: 'empresas',
+      defaultId: 'empresas-default',
+      expandedId: 'empresas-expanded',
+      btnOpenId: 'btn-expand-empresas',
+      btnCloseId: 'btn-close-empresas',
+      hideSiblings: false,
+      onLayout: function () {
+        var librosOpen = expandedCards.some(function (e) { return e.cardId === 'libros'; });
+        if (librosOpen) {
+          // Ambas expandidas → todo a posición inicial
+          restoreStats();
+          restorePodcast();
+        } else {
+          // Solo empresas → podcast al lado de libros
+          movePodcastToLibros();
         }
-      });
-    }
-
-    if (ctaBack) {
-      ctaBack.addEventListener('click', close);
-    }
-
-    // Escape key
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !introStory.hidden) {
-        close();
+      },
+      onClose: function () {
+        var librosOpen = expandedCards.some(function (e) { return e.cardId === 'libros'; });
+        if (librosOpen) {
+          // Libros sigue expandida → re-mover stats
+          moveStatsToEmpresas();
+        }
+        restorePodcast();
       }
     });
 
-    // IntersectionObserver fallback para reveal de capítulos
-    var supportsScrollTimeline = CSS.supports('animation-timeline', 'view()');
-    if (!supportsScrollTimeline) {
-      var chapters = introStory.querySelectorAll('.scrollytelling-chapter');
-      var observer = new IntersectionObserver(
+    // ========================================
+    // BooksCard
+    // ========================================
+    createCardExpansion({
+      cardId: 'libros',
+      defaultId: 'libros-default',
+      expandedId: 'libros-expanded',
+      btnOpenId: 'btn-expand-libros',
+      btnCloseId: 'btn-close-libros',
+      hideSiblings: false,
+      onLayout: function () {
+        var empOpen = expandedCards.some(function (e) { return e.cardId === 'empresas'; });
+        if (empOpen) {
+          // Ambas expandidas → todo a posición inicial
+          restoreStats();
+          restorePodcast();
+        } else {
+          // Solo libros → stats al lado de empresas
+          moveStatsToEmpresas();
+        }
+      },
+      onClose: function () {
+        var empOpen = expandedCards.some(function (e) { return e.cardId === 'empresas'; });
+        if (empOpen) {
+          // Empresas sigue expandida → re-mover podcast
+          movePodcastToLibros();
+        }
+        restoreStats();
+      }
+    });
+
+    // ========================================
+    // Escape key — cierra cualquier card expandida
+    // ========================================
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && expandedCards.length) {
+        expandedCards[expandedCards.length - 1].close();
+      }
+    });
+
+    // ========================================
+    // IntroCard — observers, counters, progress (sin cambios)
+    // ========================================
+    if (introStory) {
+      // IntersectionObserver fallback para reveal de capítulos
+      var supportsScrollTimeline = CSS.supports('animation-timeline', 'view()');
+      if (!supportsScrollTimeline) {
+        var chapters = introStory.querySelectorAll('.scrollytelling-chapter');
+        var observer = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+              }
+            });
+          },
+          { threshold: 0.15 }
+        );
+        chapters.forEach(function (ch) { observer.observe(ch); });
+      }
+
+      // Progress bar — rastrea scroll dentro del story
+      var progressBar = introStory.querySelector('.scrollytelling-progress');
+      var scrollRaf = 0;
+
+      function updateProgress() {
+        scrollRaf = 0;
+        if (introStory.hidden || !progressBar) return;
+
+        var introRect = introCard.getBoundingClientRect();
+
+        // Calcular progreso: desde que story aparece hasta su final
+        var storyTop = introStory.offsetTop - introCard.offsetTop;
+        var scrolled = -introRect.top + storyTop;
+        var total = introStory.scrollHeight;
+
+        var progress = Math.max(0, Math.min(1, scrolled / total));
+        progressBar.style.transform = 'scaleX(' + progress + ')';
+      }
+
+      window.addEventListener('scroll', function () {
+        if (!introStory.hidden && !scrollRaf) {
+          scrollRaf = requestAnimationFrame(updateProgress);
+        }
+      }, { passive: true });
+
+      // Counters animados — IntersectionObserver + requestAnimationFrame
+      var counterEls = introStory.querySelectorAll('.highlight-value[data-count-to]');
+      var COUNTER_DURATION = 1200; // ms
+
+      function animateCounter(el) {
+        var target = parseInt(el.dataset.countTo, 10);
+        var prefix = el.dataset.prefix || '';
+        var suffix = el.dataset.suffix || '';
+        if (!target) return;
+
+        var start = performance.now();
+
+        function tick(now) {
+          var elapsed = now - start;
+          var t = Math.min(elapsed / COUNTER_DURATION, 1);
+          // Ease-out cubic
+          var eased = 1 - Math.pow(1 - t, 3);
+          var current = Math.round(eased * target);
+          el.textContent = prefix + current + suffix;
+
+          if (t < 1) {
+            requestAnimationFrame(tick);
+          }
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      var counterObserver = new IntersectionObserver(
         function (entries) {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) {
-              entry.target.classList.add('is-visible');
+              animateCounter(entry.target);
+              counterObserver.unobserve(entry.target);
             }
           });
         },
-        { threshold: 0.15 }
+        { threshold: 0.5 }
       );
-      chapters.forEach(function (ch) { observer.observe(ch); });
+
+      counterEls.forEach(function (el) { counterObserver.observe(el); });
     }
-
-    // Progress bar — rastrea scroll dentro del story
-    var progressBar = introStory.querySelector('.scrollytelling-progress');
-    var scrollRaf = 0;
-
-    function updateProgress() {
-      scrollRaf = 0;
-      if (introStory.hidden || !progressBar) return;
-
-      var introRect = intro.getBoundingClientRect();
-
-      // Calcular progreso: desde que story aparece hasta su final
-      var storyTop = introStory.offsetTop - intro.offsetTop;
-      var scrolled = -introRect.top + storyTop;
-      var total = introStory.scrollHeight;
-
-      var progress = Math.max(0, Math.min(1, scrolled / total));
-      progressBar.style.transform = 'scaleX(' + progress + ')';
-    }
-
-    window.addEventListener('scroll', function () {
-      if (!introStory.hidden && !scrollRaf) {
-        scrollRaf = requestAnimationFrame(updateProgress);
-      }
-    }, { passive: true });
-
-    // Counters animados — IntersectionObserver + requestAnimationFrame
-    var counterEls = introStory.querySelectorAll('.highlight-value[data-count-to]');
-    var COUNTER_DURATION = 1200; // ms
-
-    function animateCounter(el) {
-      var target = parseInt(el.dataset.countTo, 10);
-      var prefix = el.dataset.prefix || '';
-      var suffix = el.dataset.suffix || '';
-      if (!target) return;
-
-      var start = performance.now();
-
-      function tick(now) {
-        var elapsed = now - start;
-        var t = Math.min(elapsed / COUNTER_DURATION, 1);
-        // Ease-out cubic
-        var eased = 1 - Math.pow(1 - t, 3);
-        var current = Math.round(eased * target);
-        el.textContent = prefix + current + suffix;
-
-        if (t < 1) {
-          requestAnimationFrame(tick);
-        }
-      }
-
-      requestAnimationFrame(tick);
-    }
-
-    var counterObserver = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            animateCounter(entry.target);
-            counterObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    counterEls.forEach(function (el) { counterObserver.observe(el); });
   })();
   </script>
 </BaseLayout>
