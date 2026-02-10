@@ -390,3 +390,359 @@ body {
     transform: translateY(0);
   }
 }
+
+/* ============================================
+   Light Theme — override de custom properties
+   ============================================ */
+[data-theme="light"] {
+  --color-brand-900: #FEFCF2;  /* fondo — crema suave */
+  --color-brand-800: #E8E0CC;  /* cards — crema más marcado */
+  --color-brand-700: #D5CFBE;  /* bordes decorativos */
+  --color-brand-600: #A3B087;  /* decorativo — sage green */
+  --color-brand-500: #3C4D57;  /* texto terciario — 7.1:1 ✓ AAA */
+  --color-brand-400: #3E4F59;  /* texto secundario */
+  --color-brand-300: #354350;  /* texto medio */
+  --color-brand-200: #2D3A47;  /* texto fuerte */
+  --color-brand-100: #273340;  /* texto body */
+  --color-brand-50: #1E2230;   /* títulos */
+  --color-accent: #3A4A2D;    /* olive oscuro — labels texto */
+  --color-accent-light: #435234;  /* hover btn — texto crema: 7.6:1 ✓ AAA */
+  --color-accent-dark: #2E3C22;  /* accent más profundo */
+}
+
+/* ---- Light theme: fondos sólidos (sin alpha) ---- */
+[data-theme="light"] .bg-brand-800\/40,
+[data-theme="light"] .bg-brand-800\/50,
+[data-theme="light"] .bg-brand-800\/60 {
+  background-color: var(--color-brand-800);
+}
+/* Inner cards: más claras que la card padre para diferenciarse */
+[data-theme="light"] .bg-brand-800\/30 {
+  background-color: #FEFCF2;
+}
+[data-theme="light"] .bg-brand-700\/50 {
+  background-color: var(--color-brand-700);
+}
+
+/* ---- Light theme: sombras para profundidad en cards ---- */
+[data-theme="light"] .rounded-card,
+[data-theme="light"] .rounded-card-sm {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+[data-theme="light"] .rounded-card:hover,
+[data-theme="light"] .rounded-card-sm:hover {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* ---- Light theme: sin bordes en cards (las sombras dan profundidad) ---- */
+[data-theme="light"] .border-brand-800 {
+  border-color: transparent;
+}
+[data-theme="light"] .hover\:border-accent\/30:hover {
+  border-color: transparent;
+}
+
+/* ---- Light theme: botón secondary mantiene borde visible ---- */
+[data-theme="light"] .border-brand-600 {
+  border-color: var(--color-brand-400);
+}
+
+/* ---- Light theme: barra social de foto — mantener oscura ---- */
+[data-theme="light"] .bg-brand-900\/80 {
+  background-color: rgba(30, 34, 48, 0.85);
+}
+
+/* ---- Light theme: íconos sociales legibles sobre fondo oscuro ---- */
+[data-theme="light"] .bg-brand-900\/80 .text-brand-400 {
+  color: #A3B087;
+}
+[data-theme="light"] .bg-brand-900\/80 .hover\:text-brand-50:hover {
+  color: #FEFCF2;
+}
+
+/* ---- Light theme: newsletter accent card con tinte sage green ---- */
+[data-theme="light"] .border-accent\/20 {
+  border-color: color-mix(in oklab, #A3B087 40%, transparent);
+}
+[data-theme="light"] .bg-accent\/5 {
+  background-color: color-mix(in oklab, #A3B087 10%, transparent);
+}
+
+/* ---- Light theme: inner cards (logos empresa) más definidas ---- */
+[data-theme="light"] .bg-brand-700\/50,
+[data-theme="light"] .bg-brand-700\/70 {
+  background-color: color-mix(in oklab, var(--color-brand-700) 50%, transparent);
+}
+
+/* ---- Light theme: logos expandidos en blanco (excepto Kambista y MGW) ---- */
+[data-theme="light"] #empresas-expanded .bg-brand-700\/20 img {
+  filter: brightness(0) invert(1);
+}
+[data-theme="light"] #empresas-expanded .bg-brand-700\/20 img[alt="Kambista"],
+[data-theme="light"] #empresas-expanded .bg-brand-700\/20 img[alt="MyGoodWeek"] {
+  filter: none;
+}
+
+/* ---- Light theme: bordes inner cards más definidos ---- */
+[data-theme="light"] .border-brand-700\/50 {
+  border-color: var(--color-brand-700);
+}
+
+/* ---- Light theme: icon boxes podcast/speaking más visibles ---- */
+[data-theme="light"] .bg-\[\#1DB954\]\/10 {
+  background-color: rgba(29, 185, 84, 0.18);
+}
+[data-theme="light"] .bg-\[\#1DB954\]\/20 {
+  background-color: rgba(29, 185, 84, 0.28);
+}
+[data-theme="light"] .bg-red-500\/10 {
+  background-color: rgba(239, 68, 68, 0.18);
+}
+[data-theme="light"] .bg-red-500\/20 {
+  background-color: rgba(239, 68, 68, 0.28);
+}
+
+/* ---- Light theme: cards destacadas con fondo sage green ---- */
+[data-theme="light"] #intro,
+[data-theme="light"] #libros {
+  background-color: #5C6B4A;
+  border-color: #4E5D3E;
+}
+[data-theme="light"] #empresas {
+  background-color: #19100e;
+  border-color: #0f0908;
+}
+
+/* Intro: textos claros sobre verde — jerarquía con opacidad */
+[data-theme="light"] #intro .text-accent {
+  color: rgba(255, 255, 255, 0.7);
+}
+[data-theme="light"] #intro .text-brand-50 {
+  color: #FFFFFF;
+}
+[data-theme="light"] #intro .text-brand-300 {
+  color: rgba(255, 255, 255, 0.75);
+}
+[data-theme="light"] #intro .text-brand-500 {
+  color: rgba(255, 255, 255, 0.5);
+}
+[data-theme="light"] #intro .text-brand-400 {
+  color: rgba(255, 255, 255, 0.6);
+}
+[data-theme="light"] #intro .border-brand-700\/50 {
+  border-color: rgba(254, 252, 242, 0.2);
+}
+/* Intro: botón primary invertido sobre verde */
+[data-theme="light"] #intro .bg-accent {
+  background-color: #FEFCF2;
+  color: #3A4A2D;
+}
+[data-theme="light"] #intro .hover\:bg-accent-light:hover {
+  background-color: #F0EBDA;
+}
+[data-theme="light"] #intro .text-brand-100 {
+  color: #FEFCF2;
+}
+
+/* Empresas y Libros: textos claros — jerarquía con opacidad */
+[data-theme="light"] #empresas .text-accent,
+[data-theme="light"] #libros .text-accent {
+  color: rgba(255, 255, 255, 0.7);
+}
+[data-theme="light"] #empresas .text-brand-50,
+[data-theme="light"] #libros .text-brand-50 {
+  color: #FFFFFF;
+}
+[data-theme="light"] #empresas .text-brand-300,
+[data-theme="light"] #libros .text-brand-300 {
+  color: rgba(255, 255, 255, 0.75);
+}
+[data-theme="light"] #empresas .text-brand-400,
+[data-theme="light"] #libros .text-brand-400 {
+  color: rgba(255, 255, 255, 0.6);
+}
+[data-theme="light"] #empresas .text-brand-500,
+[data-theme="light"] #libros .text-brand-500 {
+  color: rgba(255, 255, 255, 0.5);
+}
+/* Empresas/Libros: botones expandir/cerrar claros */
+[data-theme="light"] #empresas .hover\:bg-brand-800:hover,
+[data-theme="light"] #libros .hover\:bg-brand-800:hover {
+  background-color: rgba(254, 252, 242, 0.2);
+}
+[data-theme="light"] #empresas .hover\:text-brand-50:hover,
+[data-theme="light"] #libros .hover\:text-brand-50:hover {
+  color: #FEFCF2;
+}
+/* Empresas colapsado: logo boxes sobre fondo oscuro */
+[data-theme="light"] #empresas .bg-brand-700\/50 {
+  background-color: rgba(254, 252, 242, 0.12);
+}
+[data-theme="light"] #empresas .hover\:bg-brand-700\/70:hover {
+  background-color: rgba(254, 252, 242, 0.2);
+}
+/* Labels categoría sobre fondo oscuro — más visibles */
+[data-theme="light"] #empresas-default .text-brand-400 {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ---- Inner cards expandidas: revertir textos a oscuro sobre fondo claro ---- */
+[data-theme="light"] #empresas .bg-brand-800\/30 .text-brand-50,
+[data-theme="light"] #libros .bg-brand-800\/30 .text-brand-50 {
+  color: #1E2230;
+}
+[data-theme="light"] #empresas .bg-brand-800\/30 .text-brand-300,
+[data-theme="light"] #libros .bg-brand-800\/30 .text-brand-300 {
+  color: #354350;
+}
+[data-theme="light"] #empresas .bg-brand-800\/30 .text-brand-400,
+[data-theme="light"] #libros .bg-brand-800\/30 .text-brand-400 {
+  color: #3E4F59;
+}
+[data-theme="light"] #empresas .bg-brand-800\/30 .text-brand-500,
+[data-theme="light"] #libros .bg-brand-800\/30 .text-brand-500 {
+  color: #3C4D57;
+}
+[data-theme="light"] #empresas .bg-brand-800\/30 .text-accent,
+[data-theme="light"] #libros .bg-brand-800\/30 .text-accent {
+  color: #3A4A2D;
+}
+/* Inner cards: links diferenciados como acción */
+[data-theme="light"] #empresas .bg-brand-800\/30 .text-brand-300.hover\:text-accent,
+[data-theme="light"] #libros .bg-brand-800\/30 .text-brand-300.hover\:text-accent {
+  color: #3A4A2D;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+[data-theme="light"] #empresas .bg-brand-800\/30 .hover\:text-accent:hover,
+[data-theme="light"] #libros .bg-brand-800\/30 .hover\:text-accent:hover {
+  color: #2E3C22;
+}
+/* Inner cards: sin bordes, solo shadow + rounded */
+[data-theme="light"] #empresas .bg-brand-800\/30,
+[data-theme="light"] #libros .bg-brand-800\/30 {
+  border: none;
+}
+[data-theme="light"] #empresas .bg-brand-800\/30:hover,
+[data-theme="light"] #libros .bg-brand-800\/30:hover {
+  border: none;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 12px 32px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+[data-theme="light"] #empresas .bg-brand-800\/30 .border-b,
+[data-theme="light"] #libros .bg-brand-800\/30 .border-b {
+  border-bottom: none;
+}
+/* Inner cards: tags bg-accent/10 y bg-accent/15 visibles */
+[data-theme="light"] #empresas .bg-brand-800\/30 .bg-accent\/10,
+[data-theme="light"] #libros .bg-brand-800\/30 .bg-accent\/15 {
+  background-color: color-mix(in oklab, #A3B087 20%, transparent);
+}
+
+/* ---- Scrollytelling: verde hasta progress bar, luego crema card ---- */
+[data-theme="light"] #intro.card-expanded {
+  background: linear-gradient(
+    to bottom,
+    #5C6B4A 520px,
+    #E8E0CC 521px
+  );
+}
+
+/* Scrollytelling: intro text sobre zona verde — mantener blanco */
+[data-theme="light"] #intro-story > .text-accent {
+  color: rgba(255, 255, 255, 0.7);
+}
+[data-theme="light"] #intro-story > .text-brand-300 {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Scrollytelling: chapters — textos oscuros sobre fondo crema */
+[data-theme="light"] #intro-story .scrollytelling-chapter .text-accent {
+  color: #3A4A2D;
+}
+[data-theme="light"] #intro-story .scrollytelling-chapter .text-brand-50 {
+  color: #1E2230;
+}
+[data-theme="light"] #intro-story .scrollytelling-chapter .text-brand-300 {
+  color: #354350;
+}
+[data-theme="light"] #intro-story .scrollytelling-chapter .text-brand-400 {
+  color: #3E4F59;
+}
+[data-theme="light"] #intro-story .scrollytelling-chapter .text-brand-500 {
+  color: #3C4D57;
+}
+
+/* Scrollytelling: highlight/métricas boxes — fondo blanco con sombra */
+[data-theme="light"] #intro-story .bg-brand-800\/50 {
+  background-color: #FEFCF2;
+  border-color: #D5CFBE;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] #intro-story .highlight-value {
+  color: #3A4A2D;
+}
+
+/* Scrollytelling: bordes de imágenes y media */
+[data-theme="light"] #intro-story .border-brand-700\/30 {
+  border-color: #D5CFBE;
+}
+[data-theme="light"] #intro-story .bg-brand-800\/30 {
+  background-color: #E8E0CC;
+}
+
+/* Scrollytelling: chapter separadores */
+[data-theme="light"] #intro-story .scrollytelling-chapter {
+  border-bottom-color: #D5CFBE;
+}
+
+/* Scrollytelling: CTA botones sobre fondo claro */
+[data-theme="light"] #intro-story .bg-accent {
+  background-color: #3A4A2D;
+  color: #FEFCF2;
+}
+[data-theme="light"] #intro-story .hover\:bg-accent-light:hover {
+  background-color: #435234;
+}
+[data-theme="light"] #intro-story .border-brand-600 {
+  border-color: #3E4F59;
+}
+[data-theme="light"] #intro-story .text-brand-100 {
+  color: #273340;
+}
+
+/* Scrollytelling: progress bar */
+[data-theme="light"] .scrollytelling-progress {
+  background-color: #3A4A2D;
+}
+
+/* ---- Intro: botón secondary más visible sobre verde ---- */
+[data-theme="light"] #intro .border-brand-600 {
+  border-color: #FEFCF2;
+}
+
+/* ---- Botón cerrar (X) más visible sobre verde ---- */
+[data-theme="light"] #empresas > .close-btn,
+[data-theme="light"] #libros > .close-btn,
+[data-theme="light"] #empresas > .expand-btn,
+[data-theme="light"] #libros > .expand-btn {
+  color: #FEFCF2;
+}
+
+/* ---- Logo header expandido: acorde al fondo oscuro de empresas ---- */
+[data-theme="light"] #empresas-expanded .bg-brand-700\/20 {
+  background-color: #2E2420;
+}
+
+/* Logo Cofoundy blanco → invertir en tema claro */
+[data-theme="light"] footer a[href*="cofoundy"] img {
+  filter: invert(1);
+}

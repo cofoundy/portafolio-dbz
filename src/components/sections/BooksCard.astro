@@ -77,10 +77,10 @@ const MARQUEE_COPIES = 4;
               {cover && <Image src={cover} alt={book.data.title} loading="lazy" class="h-48 w-auto rounded-lg" />}
             </div>
             <div class="flex flex-col gap-2">
-              <div class="flex items-start gap-2">
+              <div class="flex flex-col gap-1.5">
                 <h3 class="text-lg font-semibold text-brand-50">{book.data.title}</h3>
                 {book.data.bestseller && (
-                  <span class="shrink-0 rounded-full bg-accent/15 px-2 py-0.5 text-xs font-semibold text-accent">Bestseller</span>
+                  <span class="w-fit rounded-full bg-accent/15 px-2 py-0.5 text-xs font-semibold text-accent">Bestseller</span>
                 )}
               </div>
               {book.data.subtitle && (
