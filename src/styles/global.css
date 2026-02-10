@@ -33,8 +33,12 @@
 /* ============================================
    Base Styles
    ============================================ */
-html {
-  scroll-behavior: smooth;
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
 }
 
 body {
@@ -187,7 +191,7 @@ body {
    Podcast Card — layout horizontal cuando es 2-col
    ============================================ */
 #contenido.col-span-2 .podcast-inner {
-  flex-direction: row;
+  flex-direction: row-reverse;
   gap: 1.5rem;
 }
 
@@ -219,10 +223,7 @@ body {
 
 /* Clase genérica para cards expandidas */
 .card-expanded {
-  grid-column: 1 / -1;
   grid-row: auto;
-  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Botón expandir: visible por defecto, oculto en modo expandido */

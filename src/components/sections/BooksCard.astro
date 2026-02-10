@@ -37,13 +37,13 @@ const MARQUEE_COPIES = 4;
   </button>
 
   <!-- Contenido colapsado -->
-  <div id="libros-default">
+  <div id="libros-default" class="flex flex-1 flex-col">
     <SectionHeader
       label="Libros"
       title="Autor bestseller"
       description="Lecciones de emprendimiento destiladas en libros prácticos."
     />
-    <div class="book-marquee mt-6">
+    <div class="book-marquee mt-6 flex-1 items-end">
       {Array.from({ length: MARQUEE_COPIES }).map((_, i) => (
         <div class="book-marquee-content" aria-hidden={i > 0 ? "true" : undefined}>
           {books.map((book) => {

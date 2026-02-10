@@ -9,6 +9,7 @@ const projects = defineCollection({
     categoryLabel: z.string(),
     role: z.string(),
     metrics: z.string().optional(),
+    achievements: z.array(z.string()).default([]),
     url: z.string().url().optional(),
     logo: z.string(),
     order: z.number(),

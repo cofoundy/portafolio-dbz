@@ -26,6 +26,14 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
         <PodcastCard />
         <SpeakingCard />
       </div>
+      <div id="theme-switch" hidden class="flex-col items-center justify-center rounded-card-sm border border-brand-800 bg-brand-800/40 p-4 md:p-5 text-center transition-colors hover:border-accent/30">
+        <button class="theme-toggle-btn grid h-10 w-10 place-items-center rounded-full border border-brand-700 text-brand-300 transition-colors hover:bg-brand-800 hover:text-brand-50" aria-label="Cambiar tema">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </button>
+        <p class="mt-1 text-xs text-brand-400">Tema</p>
+      </div>
       <NewsletterCard />
     </div>
   </section>
@@ -50,6 +58,9 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
       var btnClose = document.getElementById(config.btnCloseId);
 
       if (!card || !defaultContent || !expandedContent || !btnOpen || !btnClose) return null;
+
+      // Guardar clases de span originales para restaurar al cerrar
+      var originalClasses = card.className;
 
       var hideSiblings = config.hideSiblings !== false;
       var siblings = Array.prototype.filter.call(bentoGrid.children, function (el) {
@@ -79,39 +90,42 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
         // Hook: cambios de layout adicionales (ej. mover stats)
         if (config.onLayout) config.onLayout();
 
-        // Cambiar layout: expandir card, mostrar contenido expandido
+        // 1) Ocultar card ANTES de moverla (sin transición)
+        card.style.transition = 'none';
+        card.style.clipPath = 'inset(0 0 100% 100%)';
+        card.offsetHeight;
+
+        // 2) Mover en el grid (invisible gracias al clip-path total)
         if (hideSiblings) {
           siblings.forEach(function (el) { el.hidden = true; });
         }
         card.classList.add('card-expanded');
+        card.classList.remove('col-span-2', 'md:col-span-2', 'md:col-span-3');
+        card.classList.add('col-span-2', 'md:col-span-4');
         defaultContent.hidden = true;
         expandedContent.hidden = false;
 
-        // FLIP: rect después del cambio
+        // 3) Medir rect expandida (card en col 1, pero invisible)
         var lastRect = card.getBoundingClientRect();
 
-        // Calcular transform para mover la card a su posición original
-        var dx = firstRect.left - lastRect.left;
-        var dy = firstRect.top - lastRect.top;
-        savedTransform = 'translate(' + dx + 'px,' + dy + 'px)';
-
-        // Calcular clip-path para recortar al tamaño original
-        // (relativo al elemento, sin considerar posición porque transform la maneja)
-        var clipRight = Math.max(0, lastRect.width - firstRect.width);
+        // 4) Calcular máscara que muestra solo la zona original
+        var clipDiff = Math.max(0, lastRect.width - firstRect.width);
         var clipBottom = Math.max(0, lastRect.height - firstRect.height);
+        var dy = firstRect.top - lastRect.top;
 
-        savedClipPath = 'inset(0px ' + clipRight + 'px ' + clipBottom + 'px 0px round ' + RADIUS + ')';
+        var dx = firstRect.left - lastRect.left;
+        savedTransform = 'translate(' + dx + 'px,' + dy + 'px)';
+        savedClipPath = 'inset(0px ' + clipDiff + 'px ' + clipBottom + 'px 0px round ' + RADIUS + ')';
 
-        // Aplicar estado inicial sin transición (card en posición y tamaño original)
-        card.style.transition = 'none';
+        // 5) Mostrar card enmascarada en su posición original (sin transición)
         card.style.transform = savedTransform;
         card.style.clipPath = savedClipPath;
-        card.offsetHeight; // force reflow
+        card.offsetHeight;
 
-        // Animar a tamaño completo y posición final
-        card.style.transition = '';
-        card.style.transform = 'none';
-        card.style.clipPath = 'inset(0 round ' + RADIUS + ')';
+        // 6) Animar: revelar card completa
+        card.style.transition = 'clip-path 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)';
+        card.style.transform = 'translate(0px, 0px)';
+        card.style.clipPath = 'inset(0px 0px 0px 0px round ' + RADIUS + ')';
 
         if (btnOpen.setAttribute) btnOpen.setAttribute('aria-expanded', 'true');
         window.scrollTo({ top: card.offsetTop - 32, behavior: 'smooth' });
@@ -123,7 +137,8 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
       function close() {
         if (btnOpen.setAttribute) btnOpen.setAttribute('aria-expanded', 'false');
 
-        // Animar de vuelta al tamaño y posición original
+        // Animar de vuelta usando los valores guardados del open
+        card.style.transition = 'clip-path 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)';
         card.style.transform = savedTransform;
         card.style.clipPath = savedClipPath;
 
@@ -156,6 +171,8 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
         card.style.transition = '';
         card.style.transform = '';
         card.classList.remove('card-expanded');
+        // Restaurar clases originales de span
+        card.className = originalClasses;
         defaultContent.hidden = false;
         expandedContent.hidden = true;
         if (hideSiblings) {
@@ -270,6 +287,7 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
     var podcastEl = document.getElementById('contenido');
     var podcastWrapper = document.getElementById('podcast-speaking');
     var speakingEl = document.getElementById('speaking');
+    var themeSwitchEl = document.getElementById('theme-switch');
     var podcastMoved = false;
 
     function movePodcastToLibros() {
@@ -287,6 +305,10 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
       podcastWrapper.classList.replace('md:col-span-3', 'md:col-span-2');
       // Speaking ocupa las 2 columnas del wrapper
       if (speakingEl) speakingEl.classList.add('md:col-span-2');
+      // Ocultar tema de métricas, pasar grid a 4 col, mostrar switch externo
+      if (statTheme) statTheme.hidden = true;
+      if (statsRow) statsRow.classList.replace('md:grid-cols-5', 'md:grid-cols-4');
+      if (themeSwitchEl) { themeSwitchEl.hidden = false; themeSwitchEl.classList.add('flex'); }
       podcastMoved = true;
     }
 
@@ -301,6 +323,10 @@ import NewsletterCard from '../components/sections/NewsletterCard.astro';
       podcastWrapper.classList.replace('md:col-span-2', 'md:col-span-3');
       // Speaking vuelve a 1 columna
       if (speakingEl) speakingEl.classList.remove('md:col-span-2');
+      // Restaurar tema: mostrar en métricas, volver a 5 col, ocultar switch externo
+      if (statTheme) statTheme.hidden = false;
+      if (statsRow) statsRow.classList.replace('md:grid-cols-4', 'md:grid-cols-5');
+      if (themeSwitchEl) { themeSwitchEl.classList.remove('flex'); themeSwitchEl.hidden = true; }
       podcastMoved = false;
     }
 

@@ -1,10 +1,20 @@
 {
   "name": "Kambista",
-  "description": "Casa de cambio digital líder en Perú.",
+  "description": "Primera casa de cambio digital del Perú. Permite cambiar soles y dólares de forma segura y 100% online, con los mejores tipos de cambio del mercado, a través de su web y app móvil.",
   "category": "fintech",
   "categoryLabel": "Fintech",
   "role": "Founder & CEO",
   "metrics": "+$1B transacciones",
+  "achievements": [
+    "+$1B en transacciones y +2M de operaciones exitosas",
+    "+346K usuarios registrados",
+    "Primera casa de cambio digital del Perú (2016)",
+    "Ganador del James McGuire Business Plan Competition 2018",
+    "Ganador de StartUp Perú (5ta y 6ta generación)",
+    "Primera fintech peruana con autenticación facial (Jumio)",
+    "Primera fintech en integrarse con Interbank vía APIs",
+    "Registrada y regulada por la SBS"
+  ],
   "url": "https://kambista.com",
   "logo": "logos/kambista.svg",
   "order": 1,

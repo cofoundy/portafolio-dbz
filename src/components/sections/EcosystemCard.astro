@@ -57,7 +57,7 @@ const getLogo = (path: string) => logoModules[`../../assets/images/${path}`]?.de
           );
         })}
       </div>
-      <div id="empresa-detail" class="mt-6 hidden min-h-[3rem] opacity-0 transition-opacity duration-200 md:block">
+      <div id="empresa-detail" class="mt-6 hidden h-20 overflow-hidden opacity-0 transition-opacity duration-200 md:block">
         <p id="empresa-role" class="text-sm font-medium text-brand-200"></p>
         <p id="empresa-desc" class="mt-1 text-xs text-brand-400"></p>
       </div>
@@ -71,33 +71,46 @@ const getLogo = (path: string) => logoModules[`../../assets/images/${path}`]?.de
       title="Lo que he construido"
       description="Fintech, inversiones y productividad. Empresas que transforman Latinoamérica."
     />
-    <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-3">
       {projects.map((project) => {
         const logo = getLogo(project.data.logo);
+        const isMgw = project.id === 'my-good-week';
+        const logoClass = isMgw ? 'h-11 w-auto' : 'h-9 w-auto';
         return (
-          <div class="flex flex-col gap-4 rounded-card-sm border border-brand-700/50 bg-brand-800/30 p-6">
-            <div class="flex items-center gap-4">
-              <div class="grid h-12 w-12 shrink-0 place-items-center rounded-inner bg-brand-700/50">
-                {logo && <Image src={logo} alt={project.data.name} loading="lazy" class="h-6 w-auto" />}
-              </div>
-              <div>
-                <h3 class="text-lg font-semibold text-brand-50">{project.data.name}</h3>
-                <span class="text-xs text-accent">{project.data.categoryLabel}</span>
-              </div>
+          <div class="group/card flex flex-col rounded-card-sm border border-brand-700/50 bg-brand-800/30 transition-colors hover:border-accent/30">
+            {/* Logo box: mismo tamaño para todos */}
+            <div class="grid h-24 place-items-center border-b border-brand-700/30 bg-brand-700/20 rounded-t-card-sm">
+              {logo && <Image src={logo} alt={project.data.name} loading="lazy" class={logoClass} />}
             </div>
-            <p class="text-sm font-medium text-brand-200">{project.data.role}</p>
-            <p class="text-sm text-brand-400">{project.data.description}</p>
-            {project.data.metrics && (
-              <p class="text-sm font-semibold text-accent">{project.data.metrics}</p>
-            )}
-            {project.data.url && (
-              <a href={project.data.url} target="_blank" rel="noopener noreferrer" class="mt-auto inline-flex items-center gap-1 text-sm text-brand-300 transition-colors hover:text-accent">
-                Visitar
-                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
-                </svg>
-              </a>
-            )}
+            {/* Contenido */}
+            <div class="flex flex-1 flex-col gap-3 p-5">
+              <div>
+                <div class="flex items-center justify-between">
+                  <h3 class="text-base font-semibold text-brand-50">{project.data.name}</h3>
+                  <span class="rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-medium text-accent">{project.data.categoryLabel}</span>
+                </div>
+                <p class="mt-1 text-xs font-medium text-brand-300">{project.data.role}</p>
+              </div>
+              <p class="text-sm leading-relaxed text-brand-400">{project.data.description}</p>
+              {project.data.achievements && project.data.achievements.length > 0 && (
+                <ul class="flex flex-col gap-1.5">
+                  {project.data.achievements.map((achievement: string) => (
+                    <li class="flex items-start gap-2 text-xs text-brand-300">
+                      <span class="mt-1 h-1 w-1 shrink-0 rounded-full bg-accent"></span>
+                      {achievement}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {project.data.url && (
+                <a href={project.data.url} target="_blank" rel="noopener noreferrer" class="mt-auto inline-flex items-center gap-1.5 text-sm text-brand-300 transition-colors hover:text-accent">
+                  Visitar
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3" />
+                  </svg>
+                </a>
+              )}
+            </div>
           </div>
         );
       })}

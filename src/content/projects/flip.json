@@ -1,9 +1,18 @@
 {
   "name": "Flip",
-  "description": "Plataforma de inversiones alternativas.",
+  "description": "Plataforma WealthTech que democratiza las inversiones en Perú. Canal digital de Independiente SAF, permite invertir en fondos mutuos enfocados en el mercado de EE.UU. desde USD $100.",
   "category": "investments",
   "categoryLabel": "Inversiones",
   "role": "Co-founder",
+  "metrics": "+$40M bajo administración",
+  "achievements": [
+    "+USD $40M en activos bajo administración",
+    "+6,000 clientes inversionistas",
+    "Fondo Cobra Achorada: #1 en partícipes de renta variable en Perú",
+    "#1 en rentabilidad entre fondos no bancarios (2024)",
+    "Rentabilidad histórica promedio de 10% anual en dólares",
+    "Regulada por la SMV del Perú"
+  ],
   "url": "https://flipinversiones.com",
   "logo": "logos/flip.svg",
   "order": 2,

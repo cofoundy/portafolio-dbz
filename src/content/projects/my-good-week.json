@@ -1,9 +1,15 @@
 {
   "name": "MyGoodWeek",
-  "description": "App de productividad y bienestar.",
+  "description": "El primer planificador de tiempo diseñado para el éxito a largo plazo. Convierte objetivos ambiciosos en acciones semanales concretas con seguimiento de hábitos e integración con Google Calendar.",
   "category": "wellness",
   "categoryLabel": "Productividad",
   "role": "Founder",
+  "achievements": [
+    "Disponible en iOS, Android y Web",
+    "Comunidad de +14,000 personas",
+    "+140 reviews en Product Hunt",
+    "2 años de desarrollo con metodología propia"
+  ],
   "url": "https://mygoodweek.com",
   "logo": "logos/mgw.svg",
   "order": 3,
