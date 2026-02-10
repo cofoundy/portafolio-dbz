@@ -105,32 +105,40 @@ body {
   }
 }
 
-#intro > :first-child > *,
-#intro > :last-child {
+#intro-default > :first-child > *,
+#intro-default > :last-child {
   animation: intro-reveal 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
 /* Tagline */
-#intro > :first-child > :nth-child(1) { animation-delay: 0.1s; }
+#intro-default > :first-child > :nth-child(1) { animation-delay: 0.1s; }
 /* H1 */
-#intro > :first-child > :nth-child(2) { animation-delay: 0.18s; }
+#intro-default > :first-child > :nth-child(2) { animation-delay: 0.18s; }
 /* Subtítulo */
-#intro > :first-child > :nth-child(3) { animation-delay: 0.26s; }
+#intro-default > :first-child > :nth-child(3) { animation-delay: 0.26s; }
 /* Botones */
-#intro > :first-child > :nth-child(4) { animation-delay: 0.34s; }
+#intro-default > :first-child > :nth-child(4) { animation-delay: 0.34s; }
 /* Visto en */
-#intro > :last-child { animation-delay: 0.42s; }
+#intro-default > :last-child { animation-delay: 0.42s; }
 
 /* Accesibilidad: respetar preferencias del usuario */
 @media (prefers-reduced-motion: reduce) {
   .bento-grid > *,
-  #intro > :first-child > *,
-  #intro > :last-child,
-  .book-marquee-content {
+  #intro-default > :first-child > *,
+  #intro-default > :last-child,
+  .book-marquee-content,
+  #intro.intro-expanded,
+  .scrollytelling-chapter,
+  .chapter-item {
     animation: none !important;
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
+    clip-path: none !important;
+  }
+
+  .scrollytelling-progress {
+    display: none;
   }
 }
 
@@ -172,5 +180,172 @@ body {
 
   #libros:hover .book-marquee:hover .book-marquee-content {
     animation-play-state: paused;
+  }
+}
+
+/* ============================================
+   Intro Card — expansión (storytelling)
+   ============================================ */
+/* Foto circular: oculta por defecto */
+.intro-photo {
+  display: none;
+}
+
+#intro.intro-expanded {
+  grid-column: 1 / -1;
+  grid-row: auto;
+  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* No re-animar intro-reveal al volver */
+#intro.intro-expanded > * {
+  animation: none;
+}
+
+/* Hero: foto posicionada sin afectar el texto */
+#intro.intro-expanded #intro-hero {
+  position: relative;
+}
+
+/* Mostrar foto circular, absoluta a la derecha */
+#intro.intro-expanded .intro-photo {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Ocultar botones y visto en */
+#intro.intro-expanded #intro-buttons,
+#intro.intro-expanded #intro-visto-en {
+  display: none !important;
+}
+
+/* Intro card necesita position relative para el botón cerrar */
+#intro {
+  position: relative;
+}
+
+/* Botón cerrar: oculto por defecto, visible en modo expandido */
+.intro-close-btn {
+  display: none;
+}
+
+#intro.intro-expanded .intro-close-btn {
+  display: grid;
+}
+
+/* Chapter sections */
+.scrollytelling-chapter {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-brand-700) 30%, transparent);
+}
+
+/* ============================================
+   Chapter cover — hover slide reveal
+   ============================================ */
+.chapter-cover {
+  z-index: 1;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .chapter-cover.slide-left {
+  transform: translateX(-100%);
+}
+
+.group:hover .chapter-cover.slide-right {
+  transform: translateX(100%);
+}
+
+/* ============================================
+   Progress bar sticky
+   ============================================ */
+.scrollytelling-progress {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: 3px;
+  background-color: var(--color-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+/* ============================================
+   CSS Scroll-Driven Animations — chapter + stagger
+   ============================================ */
+@supports (animation-timeline: view()) {
+  .scrollytelling-chapter {
+    animation: chapter-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+  }
+
+  /* Stagger: cada .chapter-item se revela con offset progresivo */
+  .chapter-item {
+    animation: item-reveal linear both;
+    animation-timeline: view();
+  }
+
+  .chapter-item:nth-child(1) { animation-range: entry 0% entry 25%; }
+  .chapter-item:nth-child(2) { animation-range: entry 5% entry 30%; }
+  .chapter-item:nth-child(3) { animation-range: entry 10% entry 35%; }
+  .chapter-item:nth-child(4) { animation-range: entry 15% entry 40%; }
+
+  @keyframes chapter-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes item-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Fallback: IntersectionObserver adds .is-visible */
+@supports not (animation-timeline: view()) {
+  .scrollytelling-chapter {
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scrollytelling-chapter.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger fallback: items se revelan con delay escalonado */
+  .chapter-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .is-visible .chapter-item:nth-child(1) { transition-delay: 0s; }
+  .is-visible .chapter-item:nth-child(2) { transition-delay: 0.08s; }
+  .is-visible .chapter-item:nth-child(3) { transition-delay: 0.16s; }
+  .is-visible .chapter-item:nth-child(4) { transition-delay: 0.24s; }
+
+  .is-visible .chapter-item {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

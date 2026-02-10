@@ -6,6 +6,7 @@ import Button from '../components/ui/Button.astro';
 import BentoCard from '../components/ui/BentoCard.astro';
 import SectionHeader from '../components/ui/SectionHeader.astro';
 import SocialIcon from '../components/ui/SocialIcon.astro';
+import Scrollytelling from '../components/sections/Scrollytelling.astro';
 
 import photoPerfil from '../assets/images/daniel-bonifaz-perfil.jpg';
 
@@ -43,25 +44,52 @@ const MARQUEE_COPIES = 4;
 
       <!-- Intro — card principal, 3 cols x 2 rows (incluye "Visto en") -->
       <BentoCard variant="default" size="xl" span="col-span-2 row-span-2 md:col-span-3" id="intro">
-        <div>
-          <p class="text-sm font-medium text-accent">{personal.roles!.join(' · ')}</p>
-          <h1 class="mt-3 text-3xl font-bold leading-tight tracking-tight text-brand-50 md:text-5xl lg:text-6xl">
-            {personal.tagline}
-          </h1>
-          <p class="mt-4 max-w-xl text-base text-brand-300">
-            {personal.roles!.join(' · ')}
-          </p>
-          <div class="mt-6 flex flex-col gap-3 md:flex-row md:flex-wrap">
-            <Button href="#newsletter" variant="primary" size="md" class="w-full md:w-auto">Suscríbete al newsletter</Button>
-            <Button href="#ecosistema" variant="secondary" size="md" class="w-full md:w-auto">Conoce el ecosistema</Button>
+        <!-- Botón cerrar (solo visible en modo expandido) -->
+        <button
+          id="scrollytelling-close"
+          class="intro-close-btn absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full text-brand-400 transition-colors hover:bg-brand-800 hover:text-brand-50"
+          aria-label="Cerrar ecosistema"
+        >
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <!-- Contenido original de la intro -->
+        <div id="intro-default" class="flex flex-col justify-between flex-1">
+          <div id="intro-hero">
+            <div id="intro-text">
+              <p class="text-sm font-medium text-accent">{personal.roles!.join(' · ')}</p>
+              <h1 class="mt-3 text-3xl font-bold leading-tight tracking-tight text-brand-50 md:text-5xl lg:text-6xl">
+                {personal.tagline}
+              </h1>
+              <p class="mt-4 max-w-xl text-base text-brand-300">
+                {personal.name}
+              </p>
+              <div id="intro-buttons" class="mt-6 flex flex-col gap-3 md:flex-row md:flex-wrap">
+                <Button variant="primary" size="md" class="w-full md:w-auto" id="btn-ecosistema" aria-expanded="false">Conoce el ecosistema</Button>
+                <Button href="#newsletter" variant="secondary" size="md" class="w-full md:w-auto">Suscríbete al newsletter</Button>
+              </div>
+            </div>
+            <Image
+              src={photoPerfil}
+              alt="Daniel Bonifaz Zegarra"
+              id="intro-photo"
+              class="intro-photo rounded-full border-2 border-accent/50 object-cover object-top"
+            />
+          </div>
+          <!-- Visto en -->
+          <div id="intro-visto-en" class="mt-8 flex flex-wrap items-center gap-2 border-t border-brand-700/50 pt-6 md:gap-4">
+            <span class="text-xs uppercase tracking-wider text-brand-500">Visto en</span>
+            {personal.credibilityLogos!.map((logo: string) => (
+              <span class="text-xs font-medium text-brand-400 md:text-sm">{logo}</span>
+            ))}
           </div>
         </div>
-        <!-- Visto en -->
-        <div class="mt-8 flex flex-wrap items-center gap-2 border-t border-brand-700/50 pt-6 md:gap-4">
-          <span class="text-xs uppercase tracking-wider text-brand-500">Visto en</span>
-          {personal.credibilityLogos!.map((logo: string) => (
-            <span class="text-xs font-medium text-brand-400 md:text-sm">{logo}</span>
-          ))}
+
+        <!-- Contenido del storytelling (oculto por defecto) -->
+        <div id="intro-story" hidden>
+          <Scrollytelling />
         </div>
       </BentoCard>
 
@@ -229,4 +257,225 @@ const MARQUEE_COPIES = 4;
 
     </div>
   </section>
+
+  <!-- Script de expansión del intro card -->
+  <script is:inline>
+  (function () {
+    var intro = document.getElementById('intro');
+    var introDefault = document.getElementById('intro-default');
+    var introStory = document.getElementById('intro-story');
+    var btnOpen = document.getElementById('btn-ecosistema');
+    var btnClose = document.getElementById('scrollytelling-close');
+    var bentoGrid = document.querySelector('.bento-grid');
+
+    var introPhoto = document.getElementById('intro-photo');
+    var introText = document.getElementById('intro-text');
+    var introH1 = intro.querySelector('h1');
+
+    if (!intro || !introDefault || !introStory || !btnOpen || !btnClose || !bentoGrid) return;
+
+    var siblings = Array.prototype.filter.call(bentoGrid.children, function (el) {
+      return el !== intro;
+    });
+
+    var savedClipPath = '';
+    var RADIUS = '1.5rem';
+
+    function open() {
+      // Fijar ancho del texto antes de expandir
+      var textWidth = introText.offsetWidth;
+      // FLIP: capturar rect antes del cambio
+      var firstRect = intro.getBoundingClientRect();
+
+      // Cambiar layout: ocultar siblings, expandir intro, mostrar story
+      introText.style.maxWidth = textWidth + 'px';
+      siblings.forEach(function (el) { el.hidden = true; });
+      intro.classList.add('intro-expanded');
+      introStory.hidden = false;
+
+      // Dimensionar foto al alto del h1
+      if (introPhoto && introH1) {
+        var h1Height = introH1.offsetHeight;
+        introPhoto.style.width = h1Height + 'px';
+        introPhoto.style.height = h1Height + 'px';
+      }
+
+
+      // FLIP: rect después del cambio
+      var lastRect = intro.getBoundingClientRect();
+
+      // Calcular clip-path para recortar al tamaño original
+      var top = 0;
+      var right = Math.max(0, lastRect.width - firstRect.width);
+      var bottom = Math.max(0, lastRect.height - firstRect.height);
+      var left = 0;
+
+      savedClipPath = 'inset(' + top + 'px ' + right + 'px ' + bottom + 'px ' + left + 'px round ' + RADIUS + ')';
+
+      // Aplicar clip-path inicial (sin transición)
+      intro.style.transition = 'none';
+      intro.style.clipPath = savedClipPath;
+      intro.offsetHeight;
+
+      // Animar a tamaño completo
+      intro.style.transition = '';
+      intro.style.clipPath = 'inset(0 round ' + RADIUS + ')';
+
+      btnOpen.setAttribute('aria-expanded', 'true');
+      window.scrollTo({ top: intro.offsetTop - 32, behavior: 'smooth' });
+      btnClose.focus({ preventScroll: true });
+    }
+
+    function close() {
+      btnOpen.setAttribute('aria-expanded', 'false');
+
+      // Animar de vuelta al tamaño original
+      intro.style.clipPath = savedClipPath;
+
+      var done = false;
+      function onDone() {
+        if (done) return;
+        done = true;
+        intro.style.clipPath = '';
+        intro.style.transition = '';
+        intro.classList.remove('intro-expanded');
+        introText.style.maxWidth = '';
+        introStory.hidden = true;
+        siblings.forEach(function (el) { el.hidden = false; });
+        btnOpen.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        btnOpen.focus({ preventScroll: true });
+      }
+
+      intro.addEventListener('transitionend', function handler(e) {
+        if (e.propertyName !== 'clip-path') return;
+        intro.removeEventListener('transitionend', handler);
+        onDone();
+      });
+
+      // Fallback si la transición no dispara
+      setTimeout(onDone, 600);
+    }
+
+    btnOpen.addEventListener('click', open);
+    btnClose.addEventListener('click', close);
+
+    // CTA buttons dentro del storytelling
+    var ctaNewsletter = introStory.querySelector('.scrollytelling-cta-newsletter');
+    var ctaBack = introStory.querySelector('.scrollytelling-cta-back');
+
+    if (ctaNewsletter) {
+      ctaNewsletter.addEventListener('click', function () {
+        // Cerrar sin animación e ir al newsletter
+        intro.style.clipPath = '';
+        intro.style.transition = '';
+        intro.classList.remove('intro-expanded');
+        introText.style.maxWidth = '';
+        introStory.hidden = true;
+        siblings.forEach(function (el) { el.hidden = false; });
+        btnOpen.setAttribute('aria-expanded', 'false');
+        var newsletter = document.getElementById('newsletter');
+        if (newsletter) {
+          requestAnimationFrame(function () {
+            newsletter.scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+      });
+    }
+
+    if (ctaBack) {
+      ctaBack.addEventListener('click', close);
+    }
+
+    // Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !introStory.hidden) {
+        close();
+      }
+    });
+
+    // IntersectionObserver fallback para reveal de capítulos
+    var supportsScrollTimeline = CSS.supports('animation-timeline', 'view()');
+    if (!supportsScrollTimeline) {
+      var chapters = introStory.querySelectorAll('.scrollytelling-chapter');
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      chapters.forEach(function (ch) { observer.observe(ch); });
+    }
+
+    // Progress bar — rastrea scroll dentro del story
+    var progressBar = introStory.querySelector('.scrollytelling-progress');
+    var scrollRaf = 0;
+
+    function updateProgress() {
+      scrollRaf = 0;
+      if (introStory.hidden || !progressBar) return;
+
+      var introRect = intro.getBoundingClientRect();
+
+      // Calcular progreso: desde que story aparece hasta su final
+      var storyTop = introStory.offsetTop - intro.offsetTop;
+      var scrolled = -introRect.top + storyTop;
+      var total = introStory.scrollHeight;
+
+      var progress = Math.max(0, Math.min(1, scrolled / total));
+      progressBar.style.transform = 'scaleX(' + progress + ')';
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!introStory.hidden && !scrollRaf) {
+        scrollRaf = requestAnimationFrame(updateProgress);
+      }
+    }, { passive: true });
+
+    // Counters animados — IntersectionObserver + requestAnimationFrame
+    var counterEls = introStory.querySelectorAll('.highlight-value[data-count-to]');
+    var COUNTER_DURATION = 1200; // ms
+
+    function animateCounter(el) {
+      var target = parseInt(el.dataset.countTo, 10);
+      var prefix = el.dataset.prefix || '';
+      var suffix = el.dataset.suffix || '';
+      if (!target) return;
+
+      var start = performance.now();
+
+      function tick(now) {
+        var elapsed = now - start;
+        var t = Math.min(elapsed / COUNTER_DURATION, 1);
+        // Ease-out cubic
+        var eased = 1 - Math.pow(1 - t, 3);
+        var current = Math.round(eased * target);
+        el.textContent = prefix + current + suffix;
+
+        if (t < 1) {
+          requestAnimationFrame(tick);
+        }
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    var counterObserver = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            counterObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    counterEls.forEach(function (el) { counterObserver.observe(el); });
+  })();
+  </script>
 </BaseLayout>

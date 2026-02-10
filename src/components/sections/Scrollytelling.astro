@@ -1,0 +1,176 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry } from 'astro:content';
+
+const storyData = await getEntry('story', 'chapters');
+const chapters = storyData!.data.sort((a, b) => a.order - b.order);
+
+// Glob para resolver imágenes del story
+const storyImages = import.meta.glob<{ default: ImageMetadata }>('../../assets/images/story/*.{jpg,png,webp}', { eager: true });
+const getImage = (path: string) => storyImages[`../../assets/images/${path}`]?.default;
+
+// Extraer parte numérica de highlights para animación de conteo
+function parseHighlight(value: string) {
+  const match = value.match(/^([^\d]*)(\d+)(.*)$/);
+  return match
+    ? { prefix: match[1], num: parseInt(match[2]), suffix: match[3] }
+    : { prefix: '', num: 0, suffix: value };
+}
+---
+
+<!-- Transición breve del intro al relato -->
+<p class="mt-10 text-sm font-medium tracking-wider text-accent uppercase">El ecosistema</p>
+<p class="mt-3 max-w-xl text-base leading-relaxed text-brand-300">
+  Kambista, Flip, DBZ Media, My Good Week — no son negocios aislados. Son piezas de un ecosistema donde cada una hace más fuerte a las demás.
+</p>
+
+<!-- Progress bar -->
+<div class="scrollytelling-progress mt-10" aria-hidden="true"></div>
+
+<!-- Chapters -->
+{chapters.map((chapter, i) => {
+  const hl = chapter.highlight ? parseHighlight(chapter.highlight.value) : null;
+  const isMultiImage = Array.isArray(chapter.image);
+  const img = !isMultiImage && chapter.image ? getImage(chapter.image) : null;
+  const imgs = isMultiImage ? chapter.image.map((p: string) => getImage(p)).filter(Boolean) : [];
+  const hasMedia = img || imgs.length > 0;
+  const imageFirst = i % 2 !== 0;
+  const coverImg = chapter.cover ? getImage(chapter.cover) : null;
+  const slideDir = imageFirst ? 'left' : 'right';
+  return (
+    <section class="scrollytelling-chapter" data-chapter={chapter.id}>
+      <div class:list={["chapter-content grid gap-6 py-12 md:grid-cols-2 md:py-16", isMultiImage ? "md:items-stretch" : "md:items-center"]}>
+        {/* Columna de texto */}
+        <div class:list={[imageFirst ? "md:order-2" : ""]}>
+          <p class="chapter-item text-xs font-medium tracking-wider text-accent uppercase">{chapter.subtitle}</p>
+          <h3 class="chapter-item mt-3 text-xl font-bold text-brand-50 md:text-2xl">{chapter.title}</h3>
+          <p class="chapter-item mt-4 text-base leading-relaxed text-brand-300">{chapter.body}</p>
+          {chapter.highlight && hl && (
+            <div class="chapter-item mt-6 inline-flex flex-col rounded-2xl border border-brand-700/50 bg-brand-800/50 px-6 py-4">
+              <span
+                class="highlight-value text-2xl font-bold text-accent md:text-3xl"
+                data-count-to={hl.num}
+                data-prefix={hl.prefix}
+                data-suffix={hl.suffix}
+                style="font-variant-numeric: tabular-nums;"
+              >
+                {chapter.highlight.value}
+              </span>
+              <span class="mt-1 text-sm text-brand-400">{chapter.highlight.label}</span>
+            </div>
+          )}
+        </div>
+        {/* Columna de media */}
+        <div class:list={["chapter-item", imageFirst ? "md:order-1" : ""]}>
+          {imgs.length > 0 ? (
+            <div class="flex items-center justify-center">
+              <div class="grid aspect-square grid-cols-3 grid-rows-3" style="--b: 0.75rem; width: 402px; gap: var(--b);">
+                {imgs.map((imgSrc: ImageMetadata) => (
+                  <div class="overflow-hidden rounded-xl border border-brand-700/30 bg-brand-800/30">
+                    <Image
+                      src={imgSrc}
+                      alt={chapter.title}
+                      class="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : img ? (
+            chapter.imageLink ? (
+              <a href={chapter.imageLink} target="_blank" rel="noopener noreferrer" class="group relative block overflow-hidden rounded-xl border border-brand-700/30">
+                <Image
+                  src={img}
+                  alt={chapter.title}
+                  class="w-full"
+                  loading="lazy"
+                />
+                {coverImg && (
+                  <Image
+                    src={coverImg}
+                    alt={`${chapter.title} cover`}
+                    class:list={["chapter-cover absolute inset-0 h-full w-full object-cover", slideDir === 'left' ? 'slide-left' : 'slide-right']}
+                    loading="lazy"
+                  />
+                )}
+                <div class="absolute inset-0 z-2 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/40">
+                  <div class="grid h-16 w-16 place-items-center rounded-full bg-black/50">
+                    <svg class="ml-1 h-8 w-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            ) : coverImg ? (
+              <div class="group relative overflow-hidden rounded-xl border border-brand-700/30">
+                <Image
+                  src={img}
+                  alt={chapter.title}
+                  class="w-full"
+                  loading="lazy"
+                />
+                <Image
+                  src={coverImg}
+                  alt={`${chapter.title} cover`}
+                  class:list={["chapter-cover absolute inset-0 h-full w-full object-cover", slideDir === 'left' ? 'slide-left' : 'slide-right']}
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 z-2 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/40">
+                  <div class="grid h-16 w-16 place-items-center rounded-full bg-black/50">
+                    <svg class="ml-1 h-8 w-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div class="relative overflow-hidden rounded-xl border border-brand-700/30">
+                <Image
+                  src={img}
+                  alt={chapter.title}
+                  class="w-full"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+                  <div class="grid h-16 w-16 place-items-center rounded-full bg-black/50">
+                    <svg class="ml-1 h-8 w-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            )
+          ) : (
+            <div class="flex h-[376px] items-center justify-center rounded-xl border border-dashed border-brand-700/40 bg-brand-800/30">
+              <span class="text-sm text-brand-500">Próximamente</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+})}
+
+<!-- CTA final -->
+<div class="scrollytelling-chapter">
+  <div class="chapter-content py-12 md:py-16">
+    <p class="chapter-item text-sm font-medium tracking-wider text-accent uppercase">Sigue la historia</p>
+    <h3 class="chapter-item mt-3 text-xl font-bold text-brand-50 md:text-2xl">Esto es solo el comienzo</h3>
+    <p class="chapter-item mt-4 max-w-xl text-base text-brand-400">
+      Cada semana, Daniel comparte lecciones, historias y estrategias para emprendedores.
+    </p>
+    <div class="chapter-item mt-6 flex flex-col items-start gap-3 md:flex-row">
+      <button
+        class="scrollytelling-cta-newsletter inline-flex rounded-full bg-accent px-8 py-3 text-sm font-semibold text-brand-900 transition-colors hover:bg-accent-light"
+      >
+        Suscríbete al newsletter
+      </button>
+      <button
+        class="scrollytelling-cta-back inline-flex rounded-full border border-brand-600 px-8 py-3 text-sm font-semibold text-brand-100 transition-colors hover:border-brand-400 hover:text-white"
+      >
+        Volver al inicio
+      </button>
+    </div>
+  </div>
+</div>

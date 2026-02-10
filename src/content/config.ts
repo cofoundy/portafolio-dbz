@@ -76,4 +76,24 @@ const site = defineCollection({
   }),
 });
 
-export const collections = { projects, books, site };
+const story = defineCollection({
+  type: 'data',
+  schema: z.array(
+    z.object({
+      id: z.string(),
+      order: z.number(),
+      title: z.string(),
+      subtitle: z.string(),
+      body: z.string(),
+      highlight: z.object({
+        value: z.string(),
+        label: z.string(),
+      }).nullable(),
+      image: z.union([z.string(), z.array(z.string())]).nullable(),
+      cover: z.string().nullable().optional(),
+      imageLink: z.string().url().nullable().optional(),
+    })
+  ),
+});
+
+export const collections = { projects, books, site, story };

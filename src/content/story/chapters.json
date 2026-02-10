@@ -1,0 +1,81 @@
+[
+  {
+    "id": "semilla",
+    "order": 1,
+    "title": "La semilla que nadie esperaba",
+    "subtitle": "Filosofía antes que código",
+    "body": "Mientras otros fundadores estudiaban ingeniería o finanzas, Daniel pasó cinco años preparándose para ser sacerdote. Filosofía, antropología, ética. Parecía un desvío, pero fue exactamente lo contrario: aprendió a diseccionar problemas humanos desde sus primeros principios. Esa empatía entrenada — entender el dolor antes de buscar la solución — se convertiría en la ventaja competitiva que ningún MBA podía replicar.",
+    "highlight": null,
+    "image": "story/semilla.jpg",
+    "imageLink": "https://www.youtube.com/watch?v=pHs9FXIP1RI"
+  },
+  {
+    "id": "kambista",
+    "order": 2,
+    "title": "La primera pieza del rompecabezas",
+    "subtitle": "Kambista · Fintech",
+    "body": "En Perú, cambiar dólares significaba elegir entre el riesgo de la calle o el abuso del banco. Daniel vio la fricción que millones toleraban como normal y construyó Kambista: la primera casa de cambio 100% digital del país. Con $10,000 de sus ahorros, un MVP y la audacia de educar al propio regulador para que aceptara el modelo digital. Hoy es la piedra angular del ecosistema — y el nombre se convirtió en sinónimo de la categoría.",
+    "highlight": {
+      "value": "+116K",
+      "label": "usuarios registrados"
+    },
+    "image": "story/kambista.jpg",
+    "cover": "story/kambista-cover.webp",
+    "imageLink": "https://www.youtube.com/watch?v=1asxNKs2twI"
+  },
+  {
+    "id": "flip",
+    "order": 3,
+    "title": "El segundo piso se construye sobre confianza",
+    "subtitle": "Flip · WealthTech",
+    "body": "Si Kambista resolvía lo inmediato — cambiar dinero —, la siguiente pregunta era inevitable: ¿y después qué hago con ese dinero? Así nació Flip Inversiones: acceso a portafolios de Wall Street desde $100, sin intermediarios costosos ni capitales mínimos de medio millón. La magia está en la conexión: quien ya confía en Kambista da el salto natural a invertir con Flip. Una empresa alimenta a la otra.",
+    "highlight": {
+      "value": "+120%",
+      "label": "crecimiento mensual en operaciones"
+    },
+    "image": "story/flip.jpg",
+    "cover": "story/flip-cover.webp",
+    "imageLink": "https://www.youtube.com/watch?v=dES_e2HfRwc"
+  },
+  {
+    "id": "dbz-media",
+    "order": 4,
+    "title": "El motor invisible que lo mueve todo",
+    "subtitle": "DBZ Media · Contenido de alto impacto",
+    "body": "Aquí está el giro que separa a Daniel del emprendedor promedio. En lugar de gastar en publicidad, fundó DBZ Media: una empresa dedicada a crear contenido de alto impacto. Bizz (YouTube + newsletter con +108K suscriptores), Emprendebroders (podcast), LinkedIn, libros con Paidós. Cada video sobre finanzas personales, cada episodio, cada página — educa primero, vende después. El resultado: sus empresas adquieren clientes a costo prácticamente cero. DBZ Media no es marketing. Es el corazón del ecosistema.",
+    "highlight": {
+      "value": "+500K",
+      "label": "comunidad entre plataformas"
+    },
+    "image": [
+      "story/dbz-media.jpg", "story/emprendebroders.jpg", "story/bizz.jpg",
+      "story/bizz.jpg", "story/dbz-media.jpg", "story/emprendebroders.jpg",
+      "story/emprendebroders.jpg", "story/bizz.jpg", "story/dbz-media.jpg"
+    ]
+  },
+  {
+    "id": "mgw",
+    "order": 5,
+    "title": "El círculo se cierra",
+    "subtitle": "My Good Week · Productividad",
+    "body": "Un estudiante universitario no tiene capital para invertir en Flip. Pero puede comprar un planificador MGW para organizar su semana. Al hacerlo, entra al universo Bonifaz. A medida que crece profesionalmente — ayudado por la herramienta —, eventualmente tendrá ingresos para cambiar en Kambista e invertir en Flip. MGW no es solo un producto: es la puerta de entrada que cultiva al cliente futuro del ecosistema completo.",
+    "highlight": null,
+    "image": "story/my-good-week.jpg",
+    "cover": "story/mgw-cover.webp",
+    "imageLink": "https://www.youtube.com/watch?v=eQne3cCoQPA"
+  },
+  {
+    "id": "efecto-red",
+    "order": 6,
+    "title": "No es un holding. Es un organismo vivo.",
+    "subtitle": "El efecto de red personal",
+    "body": "Kambista genera confianza. Flip capitaliza esa confianza. El contenido alimenta a ambas con usuarios que llegan educados. MGW captura a la siguiente generación. Y los libros, charlas TEDx y el podcast cierran el ciclo de credibilidad. No son empresas aisladas en un portafolio: son órganos de un mismo cuerpo. La marca personal de Daniel es el sol gravitacional que mantiene todo en órbita. Así se transforma una idea en un ecosistema que impacta Latinoamérica.",
+    "highlight": {
+      "value": "4",
+      "label": "empresas flagship interconectadas"
+    },
+    "image": "story/efecto-red.jpg",
+    "cover": "story/efecto-red-cover.webp",
+    "imageLink": "https://www.youtube.com/watch?v=71aa8Wh22ew"
+  }
+]
