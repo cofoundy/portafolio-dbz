@@ -196,11 +196,16 @@ body {
 }
 
 #contenido.col-span-2 .podcast-cover {
-  display: block;
+  display: none;
   flex: 1 1 0%;
   min-width: 0;
   aspect-ratio: 1 / 1;
   overflow: hidden;
+}
+@media (min-width: 768px) {
+  #contenido.col-span-2 .podcast-cover {
+    display: block;
+  }
 }
 
 #contenido.col-span-2 .podcast-inner > :last-child {
@@ -257,6 +262,16 @@ body {
   display: none;
 }
 
+/* Expandido: reducir padding en móvil */
+#intro.card-expanded {
+  padding: 1.25rem;
+}
+@media (min-width: 768px) {
+  #intro.card-expanded {
+    padding: 3rem;
+  }
+}
+
 /* No re-animar intro-reveal al volver */
 #intro.card-expanded > * {
   animation: none;
@@ -267,13 +282,25 @@ body {
   position: relative;
 }
 
-/* Mostrar foto circular, absoluta a la derecha */
+/* Mostrar foto circular en expandido */
 #intro.card-expanded .intro-photo {
   display: block;
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  margin-top: 1rem;
+  max-width: 9rem;
+  max-height: 9rem;
+}
+
+/* Desktop: absoluta a la derecha del h1 */
+@media (min-width: 768px) {
+  #intro.card-expanded .intro-photo {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-top: 0;
+    max-width: none;
+    max-height: none;
+  }
 }
 
 
@@ -651,9 +678,18 @@ body {
 [data-theme="light"] #intro.card-expanded {
   background: linear-gradient(
     to bottom,
-    #5C6B4A 520px,
-    #E8E0CC 521px
+    #5C6B4A 600px,
+    #E8E0CC 601px
   );
+}
+@media (min-width: 768px) {
+  [data-theme="light"] #intro.card-expanded {
+    background: linear-gradient(
+      to bottom,
+      #5C6B4A 520px,
+      #E8E0CC 521px
+    );
+  }
 }
 
 /* Scrollytelling: intro text sobre zona verde — mantener blanco */
@@ -740,6 +776,54 @@ body {
 /* ---- Logo header expandido: acorde al fondo oscuro de empresas ---- */
 [data-theme="light"] #empresas-expanded .bg-brand-700\/20 {
   background-color: #2E2420;
+}
+
+/* ---- Light theme: FAB flotante móvil ---- */
+[data-theme="light"] #mobile-fab button {
+  background-color: #5C6B4A;
+  border-color: #4E5D3E;
+  color: #FEFCF2;
+}
+
+/* ============================================
+   FAB — menú flotante móvil
+   ============================================ */
+#mobile-fab .fab-satellite {
+  transform: scale(0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s;
+}
+
+#mobile-fab.open .fab-satellite {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#mobile-fab.open #fab-top {
+  transform: translateY(-3.5rem);
+}
+
+/* fab-left: solo visible cuando hay secciones expandidas */
+#mobile-fab.open.has-expansion #fab-left {
+  transform: translateX(-3.5rem);
+}
+
+#mobile-fab.open #fab-bottom {
+  transform: translateY(3.5rem);
+}
+
+/* Icono principal: hamburguesa ↔ × */
+#mobile-fab .fab-close {
+  display: none;
+}
+
+#mobile-fab.open .fab-hamburger {
+  display: none;
+}
+
+#mobile-fab.open .fab-close {
+  display: block;
 }
 
 /* Logo Cofoundy blanco → invertir en tema claro */
