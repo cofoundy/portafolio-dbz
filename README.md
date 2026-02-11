@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://cofoundy.dev/logo-cofoundy-white.svg" />
-    <source media="(prefers-color-scheme: light)" srcset="https://cofoundy.dev/logo-cofoundy-dark.svg" />
-    <img src="https://cofoundy.dev/logo-cofoundy-dark.svg" alt="Cofoundy" width="180" />
+    <source media="(prefers-color-scheme: dark)" srcset=".github/logo-cofoundy-white.svg" />
+    <source media="(prefers-color-scheme: light)" srcset=".github/logo-cofoundy-dark.svg" />
+    <img src=".github/logo-cofoundy-dark.svg" alt="Cofoundy" width="180" />
   </picture>
 </p>
 
