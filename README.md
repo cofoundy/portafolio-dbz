@@ -1,43 +1,116 @@
-# Astro Starter Kit: Minimal
+<p align="center">
+  <img src="https://cofoundy.dev/logo-cofoundy-white.svg" alt="Cofoundy" width="180" />
+</p>
 
-```sh
-pnpm create astro@latest -- --template minimal
+<h1 align="center">Daniel Bonifaz Zegarra — Portafolio</h1>
+
+<p align="center">
+  Portafolio personal y hub de marca para <strong>Daniel Bonifaz Zegarra</strong>: CEO de Kambista, autor bestseller, TEDx Speaker y emprendedor serial peruano.
+</p>
+
+<p align="center">
+  <a href="https://danielbonifaz.com">danielbonifaz.com</a>
+</p>
+
+---
+
+## Vista previa
+
+Bento-grid interactivo que presenta el ecosistema completo de Daniel: empresas fundadas (Kambista, Flip, My Good Week), libros publicados, podcast Emprendebroders, charlas TEDx y newsletter Bizz.
+
+### Secciones
+
+| Sección | Contenido |
+|---------|-----------|
+| **Intro** | Tagline, CTA y scrollytelling del ecosistema |
+| **Ecosistema** | Kambista (fintech), Flip (wealthtech), My Good Week (productividad) |
+| **Libros** | *La Fórmula para Emprender* y *El Arte de la Distracción* (Ed. Planeta) |
+| **Podcast** | Emprendebroders — 4.8 en Spotify |
+| **Speaking** | Charlas TEDx y conferencias |
+| **Newsletter** | Bizz — +13K suscriptores |
+| **Stats** | +500K comunidad, 3 empresas, $1B+ en transacciones |
+
+---
+
+## Tech Stack
+
+| Tecnología | Uso |
+|-----------|-----|
+| [Astro](https://astro.build) 5 | Framework (static site) |
+| [Tailwind CSS](https://tailwindcss.com) 4 | Estilos |
+| [Lenis](https://lenis.darkroom.engineering) | Smooth scroll |
+| [Sharp](https://sharp.pixelplumbing.com) | Optimización de imágenes |
+| TypeScript | Type safety |
+
+---
+
+## Desarrollo local
+
+```bash
+# Instalar dependencias
+pnpm install
+
+# Servidor de desarrollo (localhost:4321)
+pnpm dev
+
+# Build de producción
+pnpm build
+
+# Preview del build
+pnpm preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
+## Deployment
 
-Inside of your Astro project, you'll see the following folders and files:
+Desplegado automáticamente en **Cloudflare Pages** con GitHub Actions en cada push a `main`.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+| Entorno | URL |
+|---------|-----|
+| Producción | [portafolio-dbz.pages.dev](https://portafolio-dbz.pages.dev) |
+| Custom domain | [danielbonifaz.com](https://danielbonifaz.com) |
+
+---
+
+## Estructura del proyecto
+
+```
+src/
+├── pages/
+│   └── index.astro              # Página principal
+├── layouts/
+│   └── BaseLayout.astro         # Layout base (SEO, fonts, analytics)
+├── components/
+│   ├── sections/                # Secciones del bento grid
+│   │   ├── IntroCard.astro
+│   │   ├── PhotoCard.astro
+│   │   ├── EcosystemCard.astro
+│   │   ├── BooksCard.astro
+│   │   ├── PodcastCard.astro
+│   │   ├── SpeakingCard.astro
+│   │   ├── NewsletterCard.astro
+│   │   ├── StatsGrid.astro
+│   │   └── Scrollytelling.astro
+│   └── ui/                      # Componentes reutilizables
+│       ├── BentoCard.astro
+│       ├── Button.astro
+│       ├── SectionHeader.astro
+│       └── SocialIcon.astro
+├── content/                     # Data (JSON)
+│   ├── site/                    # Info personal y métricas
+│   ├── projects/                # Kambista, Flip, My Good Week
+│   ├── books/                   # Libros publicados
+│   └── story/                   # Capítulos del scrollytelling
+├── assets/images/               # Imágenes optimizadas por Astro
+└── styles/
+    └── global.css               # Variables CSS y estilos globales
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+---
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+<p align="center">
+  <sub>Hecho con cariño por el equipo de <a href="https://cofoundy.dev"><strong>Cofoundy</strong></a></sub>
+  <br/>
+  <sub>Productos de software en semanas, no meses.</sub>
+</p>
