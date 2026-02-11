@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="https://cofoundy.dev/logo-cofoundy-white.svg" alt="Cofoundy" width="180" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://cofoundy.dev/logo-cofoundy-white.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="https://cofoundy.dev/logo-cofoundy-dark.svg" />
+    <img src="https://cofoundy.dev/logo-cofoundy-dark.svg" alt="Cofoundy" width="180" />
+  </picture>
 </p>
 
 <h1 align="center">Daniel Bonifaz Zegarra — Portafolio</h1>
